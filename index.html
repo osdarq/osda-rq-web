@@ -5,15 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Ruang bersama Organisasi Santri Dayah Ruhul Qurani. Program tertata, amanah terjaga."
+      content="Rumah digital Organisasi Santri Dayah Ruhul Qurani. Mengenal kepengurusan, merawat amanah, dan melangkah bersama."
     />
-    <meta name="theme-color" content="#142f4c" />
+    <meta name="theme-color" content="#102d43" />
     <title>OSDA RQ · Satu Amanah, Satu Arah</title>
+    <link rel="icon" type="image/png" href="./assets/osda-logo.png" />
     <link rel="stylesheet" href="./assets/landing.css" />
   </head>
-  <body>
+  <body id="beranda">
+    <svg
+      class="icon-definitions"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      width="0"
+      height="0"
+    >
+      <defs>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M5 12h14m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="i-arrow-up" viewBox="0 0 24 24">
+          <path d="M6 18 18 6M6 6h12v12" />
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
+        </symbol>
+        <symbol id="i-book" viewBox="0 0 24 24">
+          <path
+            d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1Zm0 0v14M5 9h3m-3 4h3m8-4h3m-3 4h3"
+          />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+          <path d="m6 12 4 4 8-8" />
+        </symbol>
+        <symbol id="i-program" viewBox="0 0 24 24">
+          <rect x="4" y="5" width="16" height="16" rx="3" />
+          <path d="M8 3v4m8-4v4M4 11h16m-11 5 2 2 4-4" />
+        </symbol>
+        <symbol id="i-chat" viewBox="0 0 24 24">
+          <path
+            d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-3 3V11.5A8.5 8.5 0 0 1 9.5 3h3a8.5 8.5 0 0 1 8.5 8.5Z"
+          />
+          <path d="M7 10h8m-8 4h5" />
+        </symbol>
+        <symbol id="i-folder" viewBox="0 0 24 24">
+          <path
+            d="M3 8V5a2 2 0 0 1 2-2h5l3 3h6a2 2 0 0 1 2 2v1M3 8h18a1 1 0 0 1 1 1.2l-2 10a2 2 0 0 1-2 1.6H4a2 2 0 0 1-2-2V9a1 1 0 0 1 1-1Z"
+          />
+        </symbol>
+        <symbol id="i-people" viewBox="0 0 24 24">
+          <circle cx="9" cy="7" r="3" />
+          <path
+            d="M3 20v-2a6 6 0 0 1 12 0v2m2-16a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5v2"
+          />
+        </symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24">
+          <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+          <circle cx="12" cy="10" r="2.5" />
+        </symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24">
+          <path d="m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4Z" />
+          <path d="m8 11 3 3 5-5" />
+        </symbol>
+        <symbol id="i-send" viewBox="0 0 24 24">
+          <path d="m22 2-7 20-4-9-9-4L22 2ZM11 13 22 2" />
+        </symbol>
+        <symbol id="i-spark" viewBox="0 0 24 24">
+          <path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z" />
+        </symbol>
+      </defs>
+    </svg>
     <a class="skip-link" href="#tentang">Lewati ke isi</a>
-    <header class="landing-header">
+    <header class="landing-header" id="site-header">
       <div class="landing-shell header-inner">
         <a
           class="landing-brand"
@@ -23,9 +87,11 @@
             ><img
               src="./assets/osda-logo.png"
               alt="Logo OSDA RQ"
-              width="58"
-              height="58" /></span
-          ><span>OSDA <b>RQ</b><small>DAYAH RUHUL QURANI</small></span></a
+              width="48"
+              height="48" /></span
+          ><span class="brand-wordmark"
+            >OSDA <b>RQ</b><small>DAYAH RUHUL QURANI</small></span
+          ></a
         >
         <button
           type="button"
@@ -34,79 +100,143 @@
           aria-controls="landing-nav"
           aria-label="Buka menu"
         >
-          ☰
+          <span></span><span></span>
         </button>
         <nav id="landing-nav" aria-label="Navigasi utama">
-          <a href="#tentang">Tentang OSDA</a><a href="#amanah">Ruang amanah</a
-          ><a href="#langkah">Alur organisasi</a
-          ><a class="landing-nav-login" href="./app.html"
-            >Masuk pengurus <span aria-hidden="true">↗</span></a
-          >
+          <a class="nav-link is-current" href="#beranda" aria-current="location"
+            >Beranda</a
+          ><a class="nav-link" href="#tentang">Tentang OSDA</a
+          ><a class="nav-link" href="#amanah">Ruang amanah</a
+          ><a class="nav-link" href="#aspirasi">Suara santri</a>
+          <a class="landing-nav-login" href="./app.html"
+            ><svg class="icon"><use href="#i-user" /></svg>Ruang pengurus<svg
+              class="icon"
+            >
+              <use href="#i-arrow-up" /></svg
+          ></a>
         </nav>
       </div>
     </header>
     <main>
       <section class="landing-hero" aria-labelledby="hero-title">
-        <div class="hero-ornament" aria-hidden="true"></div>
+        <div class="hero-grid-background" aria-hidden="true"></div>
+        <div class="hero-watermark" aria-hidden="true">RQ</div>
         <div class="landing-shell hero-grid">
           <div class="hero-copy">
-            <span class="landing-eyebrow"
-              ><i></i> ORGANISASI SANTRI DAYAH RUHUL QURANI</span
-            >
-            <h1 id="hero-title">Satu amanah.<br /><em>Satu arah.</em></h1>
-            <p>
-              Berjalan bersama, bertumbuh bersama. Ruang kepengurusan untuk
-              menjaga program, merawat catatan, dan menuntaskan hasil
-              musyawarah.
+            <div class="hero-overline">
+              <span class="status-dot"></span>RUMAH DIGITAL KEPENGURUSAN<span
+                class="overline-rule"
+              ></span>
+            </div>
+            <h1 id="hero-title">
+              Satu amanah.<br /><span class="hero-title-accent"
+                ><em>Satu arah.</em
+                ><svg viewBox="0 0 400 18" aria-hidden="true">
+                  <path d="M3 12Q185-5 397 8M45 16Q218 3 362 12" /></svg
+              ></span>
+            </h1>
+            <p class="hero-tagline">Tumbuh bersama. Mengabdi untuk dayah.</p>
+            <p class="hero-description">
+              Ruang bersama santri Dayah Ruhul Qurani untuk menggerakkan
+              program, merawat catatan, dan melanjutkan amanah dengan sepenuh
+              hati.
             </p>
             <div class="hero-actions">
               <a class="landing-button" href="./app.html"
-                >Buka ruang pengurus <span aria-hidden="true">↗</span></a
-              ><a class="landing-text-link" href="#tentang"
-                >Mengenal OSDA <span aria-hidden="true">↓</span></a
-              >
+                >Masuk pengurus<svg class="icon">
+                  <use href="#i-arrow-up" /></svg></a
+              ><a class="landing-button button-outline" href="#tentang"
+                >Mengenal OSDA<svg class="icon"><use href="#i-arrow" /></svg
+              ></a>
             </div>
-            <div class="hero-period">
-              <span id="public-period">OSDA RQ KE-3</span><i></i
-              ><span>SANTRIWAN &amp; SANTRIWATI</span>
+            <div class="hero-community">
+              <span class="community-symbol"
+                ><svg class="icon"><use href="#i-people" /></svg
+              ></span>
+              <p>
+                <strong>Santriwan &amp; santriwati</strong
+                ><span>Satu kabinet. Satu semangat kebersamaan.</span>
+              </p>
+              <span class="community-star" aria-hidden="true">✦</span>
             </div>
           </div>
-          <aside class="hero-cabinet" aria-label="Identitas kepengurusan">
-            <div class="cabinet-frame">
-              <span class="cabinet-corner corner-one"></span
-              ><span class="cabinet-corner corner-two"></span>
-              <div class="cabinet-topline">
-                <span>AMANAH · KEBERSAMAAN</span
-                ><span aria-hidden="true">✦</span>
+          <aside
+            class="hero-art"
+            aria-label="Identitas Organisasi Santri Dayah Ruhul Qurani"
+          >
+            <div class="art-orbit" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </div>
+            <span class="art-star star-one" aria-hidden="true">✦</span
+            ><span class="art-star star-two" aria-hidden="true">✧</span>
+            <div class="hero-arch">
+              <div class="arch-inner-line" aria-hidden="true"></div>
+              <svg
+                class="arch-geometry"
+                viewBox="0 0 400 460"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle cx="200" cy="209" r="157" />
+                <circle cx="200" cy="209" r="113" />
+                <path
+                  d="m200 27 53 129 129 53-129 53-53 129-53-129-129-53 129-53L200 27Z"
+                />
+                <path
+                  d="m71 80 129 54L329 80l-54 129 54 129-129-54-129 54 54-129L71 80Z"
+                />
+              </svg>
+              <div class="arch-topline">
+                <span lang="ar" dir="rtl">بِسْمِ اللَّهِ</span
+                ><span>AMANAH DALAM KEBERSAMAAN</span>
               </div>
-              <div class="cabinet-seal">
-                <img
+              <div class="arch-emblem">
+                <span></span
+                ><img
                   src="./assets/osda-logo.png"
-                  alt="Lambang Organisasi Santri Dayah Ruhul Qurani"
-                  width="124"
-                  height="124"
+                  alt="Lambang OSDA RQ"
+                  width="148"
+                  height="148"
                 />
               </div>
-              <p class="cabinet-kicker">ORGANISASI SANTRI</p>
-              <h2>Dayah<br />Ruhul Qurani</h2>
-              <div class="cabinet-line" aria-hidden="true">
-                <span></span>✦<span></span>
+              <span class="arch-eyebrow">ORGANISASI SANTRI</span>
+              <h2>Ruhul Qurani</h2>
+              <div class="arch-divider" aria-hidden="true"><i></i>✦<i></i></div>
+              <span class="arch-cabinet-label">KABINET KEPENGURUSAN</span>
+              <p id="public-cabinet">Satu kabinet, satu kebersamaan.</p>
+              <div class="arch-location">
+                <svg class="icon"><use href="#i-pin" /></svg>MEULABOH · ACEH
+                BARAT
               </div>
-              <p class="cabinet-name" id="public-cabinet">
-                Satu kepengurusan.<br />Satu arah pembinaan.
-              </p>
-              <small>MEULABOH · ACEH BARAT</small>
             </div>
-            <span class="cabinet-outside-label">TERTATA DALAM AMANAH</span>
+            <div class="art-period">
+              <span class="period-flower" aria-hidden="true">✳</span
+              ><span
+                ><small>KEPENGURUSAN</small
+                ><strong id="public-period">OSDA RQ KE-3</strong></span
+              >
+            </div>
+            <div class="art-note">
+              <span class="art-note-icon"
+                ><svg class="icon"><use href="#i-shield" /></svg></span
+              ><span
+                ><strong>Amanah yang menyatukan.</strong
+                ><small>Adab, ilmu, dan pengabdian.</small></span
+              ><span class="note-dot" aria-hidden="true"></span>
+            </div>
+            <span class="art-caption">DARI SANTRI, UNTUK DAYAH.</span>
           </aside>
         </div>
         <div class="landing-shell hero-verse">
-          <span class="verse-index">AN-NISA’<b>04:58</b></span>
-          <p lang="ar" dir="rtl">
+          <div class="verse-heading">
+            <span class="verse-flower" aria-hidden="true">✦</span
+            ><span>PEGANGAN AMANAH<small>QS. AN-NISA’ · 4:58</small></span>
+          </div>
+          <p class="verse-arabic" lang="ar" dir="rtl">
             إِنَّ اللَّهَ يَأْمُرُكُمْ أَنْ تُؤَدُّوا الْأَمَانَاتِ إِلَىٰ
             أَهْلِهَا
           </p>
-          <div>
+          <div class="verse-translation">
             <p>
               “Sungguh, Allah menyuruhmu menyampaikan amanah kepada yang berhak
               menerimanya.”
@@ -115,155 +245,310 @@
               href="https://quran.com/id/wanita/58"
               target="_blank"
               rel="noopener noreferrer"
-              >QS. An-Nisa’ 4:58 · penggalan ↗</a
-            >
+              >Penggalan QS. An-Nisa’ 4:58<svg class="icon">
+                <use href="#i-arrow-up" /></svg
+            ></a>
           </div>
         </div>
       </section>
-      <section class="landing-shell about-section" id="tentang">
-        <div>
-          <span class="landing-eyebrow">01 / TENTANG OSDA</span>
-          <h2>Belajar memimpin.<br /><em>Menjaga kebersamaan.</em></h2>
-        </div>
-        <div class="about-copy">
-          <p>
-            OSDA menjadi ruang pengabdian santri dalam kehidupan dayah. Setiap
-            bidang mengemban tanggung jawab, dengan pendampingan mentor dan arah
-            pembinaan yang sama.
-          </p>
-          <p>
-            Program yang telah disahkan menjadi pedoman pelaksanaan. Catatan
-            bidang dan musyawarah bulanan membantu pengurus melihat hasil,
-            mendengarkan kendala, serta menyepakati perbaikan.
-          </p>
-          <span class="about-signature"
-            >AMANAH · MUSYAWARAH · TINDAK LANJUT</span
-          >
+      <section class="about-section" id="tentang" aria-labelledby="about-title">
+        <div class="landing-shell about-grid">
+          <div class="about-heading" data-reveal>
+            <span class="section-kicker"><i></i>MENGENAL OSDA RQ</span>
+            <h2 id="about-title">
+              Belajar memimpin.<br /><em>Menjaga kebersamaan.</em>
+            </h2>
+            <span class="about-location"
+              ><svg class="icon"><use href="#i-pin" /></svg>Dayah Ruhul Qurani ·
+              Meulaboh, Aceh Barat</span
+            >
+          </div>
+          <div class="about-copy" data-reveal>
+            <p class="about-lead">
+              Di dayah, kepemimpinan tumbuh dari kesediaan untuk mengabdi.
+            </p>
+            <p>
+              OSDA menjadi ruang belajar berorganisasi bagi santriwan dan
+              santriwati. Setiap bidang bergerak melalui program yang telah
+              disahkan, dengan arahan mentor dan pembinaan yang menyatukan
+              langkah.
+            </p>
+            <p>
+              Rumah digital ini membantu pengurus merawat prosesnya: mencatat
+              pelaksanaan, mendengarkan kendala, bermusyawarah, dan menyimpan
+              jejak kerja untuk kepengurusan berikutnya.
+            </p>
+            <div class="about-principles">
+              <span
+                ><svg class="icon"><use href="#i-check" /></svg>Program
+                resmi</span
+              ><span
+                ><svg class="icon"><use href="#i-check" /></svg>Pendampingan
+                mentor</span
+              ><span
+                ><svg class="icon"><use href="#i-check" /></svg>Kepengurusan
+                berkelanjutan</span
+              >
+            </div>
+          </div>
         </div>
       </section>
-      <section class="mandate-section" id="amanah">
+      <section
+        class="mandate-section"
+        id="amanah"
+        aria-labelledby="mandate-title"
+      >
+        <div class="section-rosette" aria-hidden="true"></div>
         <div class="landing-shell">
-          <div class="section-intro">
+          <div class="section-intro" data-reveal>
             <div>
-              <span class="landing-eyebrow">02 / RUANG AMANAH</span>
-              <h2>Catatan yang tertata,<br />langkah yang terjaga.</h2>
+              <span class="section-kicker"><i></i>RUANG AMANAH</span>
+              <h2 id="mandate-title">
+                Kerja bersama.<br /><em>Lebih tertata.</em>
+              </h2>
             </div>
             <p>
-              Pengurus bekerja melalui akun masing-masing, sesuai jabatan,
-              bidang, dan periode kepengurusan.
+              Dari program bidang sampai arsip organisasi, setiap proses punya
+              tempat untuk dijaga dan dilanjutkan.
             </p>
           </div>
           <div class="mandate-grid">
-            <article>
-              <span class="mandate-number">01</span
-              ><span class="mandate-symbol" aria-hidden="true">◇</span>
-              <h3>Program &amp; pelaksanaan</h3>
+            <article class="mandate-card program-card" data-reveal>
+              <div class="mandate-card-heading">
+                <span class="feature-icon"
+                  ><svg class="icon"><use href="#i-program" /></svg></span
+                ><span class="feature-index">01 / PELAKSANAAN</span
+                ><span class="feature-spark" aria-hidden="true">✦</span>
+              </div>
+              <h3>Program yang jelas.<br />Langkah yang tercatat.</h3>
               <p>
-                Program resmi menjadi tanggung jawab bidang. Rekap mencatat
-                kualitas pelaksanaan, kendala, dan perbaikannya.
+                Proker yang telah disahkan menjadi acuan bidang. Catat hasil
+                pelaksanaan, kendala, dan langkah perbaikannya dalam satu ruang.
               </p>
-              <a href="./app.html"
-                >Ruang program <span aria-hidden="true">↗</span></a
+              <div
+                class="program-visual"
+                aria-label="Alur program: disahkan, dilaksanakan, dievaluasi"
               >
+                <div class="program-visual-top">
+                  <span>ALUR PROGRAM BIDANG</span
+                  ><svg class="icon"><use href="#i-spark" /></svg>
+                </div>
+                <div class="program-flow">
+                  <div>
+                    <span
+                      ><svg class="icon"><use href="#i-book" /></svg></span
+                    ><strong>Disahkan</strong><small>Program resmi</small>
+                  </div>
+                  <i aria-hidden="true"></i>
+                  <div>
+                    <span
+                      ><svg class="icon"><use href="#i-check" /></svg></span
+                    ><strong>Dilaksanakan</strong><small>Oleh bidang</small>
+                  </div>
+                  <i aria-hidden="true"></i>
+                  <div>
+                    <span
+                      ><svg class="icon"><use href="#i-chat" /></svg></span
+                    ><strong>Dievaluasi</strong><small>Perbaikan bersama</small>
+                  </div>
+                </div>
+                <div class="program-frequencies">
+                  <span>Harian</span><span>Mingguan</span><span>Tahunan</span>
+                </div>
+              </div>
+              <a class="feature-link" href="./app.html"
+                >Buka ruang program<svg class="icon">
+                  <use href="#i-arrow-up" /></svg
+              ></a>
             </article>
-            <article>
-              <span class="mandate-number">02</span
-              ><span class="mandate-symbol" aria-hidden="true">✧</span>
-              <h3>Musyawarah &amp; pembinaan</h3>
+            <article class="mandate-card meeting-card" data-reveal>
+              <div class="mandate-card-heading">
+                <span class="feature-icon"
+                  ><svg class="icon"><use href="#i-chat" /></svg></span
+                ><span class="feature-index">02 / PEMBINAAN</span>
+              </div>
+              <h3>Musyawarah yang<br />menghasilkan arah.</h3>
               <p>
-                Notulen, arahan mentor, dan tindak lanjut berada dalam satu alur
-                evaluasi bulanan yang jelas.
+                Temukan titik perbaikan melalui evaluasi bulanan, arahan mentor,
+                dan keputusan yang tercatat.
               </p>
-              <a href="./app.html"
-                >Ruang evaluasi <span aria-hidden="true">↗</span></a
-              >
+              <div class="meeting-tags">
+                <span>Pelaksanaan</span><i></i><span>Kendala</span><i></i
+                ><span>Keputusan</span>
+              </div>
+              <a class="feature-link" href="./app.html"
+                >Buka ruang evaluasi<svg class="icon">
+                  <use href="#i-arrow-up" /></svg
+              ></a>
             </article>
-            <article>
-              <span class="mandate-number">03</span
-              ><span class="mandate-symbol" aria-hidden="true">▱</span>
-              <h3>Arsip organisasi</h3>
-              <p>
-                Satu ruang arsip Putra dan Putri, tersusun menurut periode dan
-                kategori untuk melanjutkan amanah.
-              </p>
-              <a href="./app.html"
-                >Ruang arsip <span aria-hidden="true">↗</span></a
-              >
+            <article class="mandate-card archive-card" data-reveal>
+              <div class="archive-illustration" aria-hidden="true">
+                <span></span><span></span
+                ><svg class="icon"><use href="#i-folder" /></svg>
+              </div>
+              <div class="archive-card-content">
+                <div class="mandate-card-heading">
+                  <span class="feature-index">03 / DOKUMENTASI</span>
+                </div>
+                <h3>Catatan hari ini.<br />Bekal esok hari.</h3>
+                <p>
+                  Arsip bersama putra dan putri, tersusun menurut periode dan
+                  kategori.
+                </p>
+                <a class="feature-link" href="./app.html"
+                  >Jelajahi ruang arsip<svg class="icon">
+                    <use href="#i-arrow-up" /></svg
+                ></a>
+              </div>
             </article>
+          </div>
+          <div class="mandate-footnote" data-reveal>
+            <svg class="icon"><use href="#i-shield" /></svg
+            ><span
+              >Setiap pengurus masuk melalui akun pribadi, dengan akses sesuai
+              amanahnya.</span
+            ><a href="./app.html"
+              >Masuk pengurus<svg class="icon"><use href="#i-arrow" /></svg
+            ></a>
           </div>
         </div>
       </section>
-      <section class="landing-shell process-section" id="langkah">
-        <div>
-          <span class="landing-eyebrow">03 / LANGKAH BERSAMA</span>
-          <h2>Dari amanah<br />menjadi <em>perbaikan.</em></h2>
-          <p>Catatan hari ini menjadi bekal kepengurusan berikutnya.</p>
-        </div>
-        <ol class="process-list">
-          <li>
-            <b>01</b>
-            <div>
-              <h3>Berangkat dari program resmi</h3>
-              <p>
-                Daftar program yang telah disahkan menjadi acuan kerja setiap
-                bidang.
-              </p>
-            </div>
-            <span aria-hidden="true">↗</span>
-          </li>
-          <li>
-            <b>02</b>
-            <div>
-              <h3>Mencatat pelaksanaan</h3>
-              <p>
-                Pengurus melaporkan hasil dan kendala, dengan arahan mentor
-                sebagai pendamping.
-              </p>
-            </div>
-            <span aria-hidden="true">↗</span>
-          </li>
-          <li>
-            <b>03</b>
-            <div>
-              <h3>Menyepakati langkah berikutnya</h3>
-              <p>
-                Musyawarah menghasilkan keputusan, tindak lanjut, dan arsip yang
-                dapat dipertanggungjawabkan.
-              </p>
-            </div>
-            <span aria-hidden="true">↗</span>
-          </li>
-        </ol>
-      </section>
-      <section class="aspiration-section">
-        <div class="landing-shell aspiration-inner">
-          <div>
-            <span class="landing-eyebrow">SUARA SANTRI</span>
-            <h2>Masukanmu berarti<br />bagi langkah bersama.</h2>
+      <section
+        class="process-section"
+        id="langkah"
+        aria-labelledby="process-title"
+      >
+        <div class="landing-shell process-grid">
+          <div class="process-heading" data-reveal>
+            <span class="section-kicker"><i></i>AMANAH YANG BERLANJUT</span>
+            <h2 id="process-title">
+              Amanah hari ini.<br /><em
+                >Bekal untuk<br />langkah berikutnya.</em
+              >
+            </h2>
             <p>
-              Sampaikan aspirasi dengan bahasa yang baik. Pilih anonim atau
-              sertakan nama, lalu simpan kode pribadi untuk melihat tanggapan.
+              Pengurus berganti. Pengalaman, catatan, dan arah pembinaan tetap
+              menjadi bekal bersama.
             </p>
+            <div class="continuity-mark" aria-hidden="true">
+              <svg class="icon"><use href="#i-spark" /></svg
+              ><span>AMANAH<br /><b>BERKELANJUTAN</b></span>
+            </div>
           </div>
-          <a class="landing-button" href="./app.html?aspirasi=1"
-            >Sampaikan aspirasi <span aria-hidden="true">↗</span></a
-          >
+          <ol class="process-list">
+            <li data-reveal>
+              <span class="process-number">01</span>
+              <div>
+                <span class="process-kicker">BERGERAK</span>
+                <h3>Bidang menjalankan amanah.</h3>
+                <p>
+                  Program resmi menjadi acuan kerja. Setiap bidang mencatat
+                  hasil pelaksanaan dan kendala yang perlu dibahas bersama.
+                </p>
+              </div>
+              <svg class="icon"><use href="#i-program" /></svg>
+            </li>
+            <li data-reveal>
+              <span class="process-number">02</span>
+              <div>
+                <span class="process-kicker">MENDAMPINGI</span>
+                <h3>Mentor menjaga arah.</h3>
+                <p>
+                  Pembinaan dan musyawarah membantu pengurus menyepakati
+                  keputusan serta tindak lanjut yang jelas.
+                </p>
+              </div>
+              <svg class="icon"><use href="#i-people" /></svg>
+            </li>
+            <li data-reveal>
+              <span class="process-number">03</span>
+              <div>
+                <span class="process-kicker">MELANJUTKAN</span>
+                <h3>Pengalaman menjadi bekal.</h3>
+                <p>
+                  Program berjalan, arsip penting, dan catatan kepengurusan
+                  diteruskan melalui serah terima yang tertata.
+                </p>
+              </div>
+              <svg class="icon"><use href="#i-folder" /></svg>
+            </li>
+          </ol>
+        </div>
+      </section>
+      <section
+        class="aspiration-section"
+        id="aspirasi"
+        aria-labelledby="aspiration-title"
+      >
+        <div class="landing-shell">
+          <div class="aspiration-inner" data-reveal>
+            <div class="aspiration-copy">
+              <span class="section-kicker"><i></i>SUARA SANTRI</span>
+              <h2 id="aspiration-title">
+                Ada gagasan?<br /><em>Mari dengarkan.</em>
+              </h2>
+              <p>
+                Hal baik bisa dimulai dari satu masukan. Sampaikan aspirasi
+                dengan bahasa yang baik untuk kehidupan dayah yang lebih baik.
+              </p>
+              <a class="landing-button button-gold" href="./app.html?aspirasi=1"
+                >Sampaikan aspirasi<svg class="icon">
+                  <use href="#i-arrow-up" /></svg></a
+              ><span class="aspiration-privacy"
+                ><svg class="icon"><use href="#i-shield" /></svg>Bisa anonim ·
+                Lacak tanggapan dengan kode pribadi</span
+              >
+            </div>
+            <div class="aspiration-art" aria-hidden="true">
+              <div class="message-orbit orbit-one"></div>
+              <div class="message-orbit orbit-two"></div>
+              <span class="message-spark spark-a">✦</span
+              ><span class="message-spark spark-b">✧</span>
+              <div class="message-paper">
+                <span class="paper-icon"
+                  ><svg class="icon"><use href="#i-chat" /></svg></span
+                ><strong>Suaramu<br /><em>berarti.</em></strong
+                ><i></i><i></i><i></i>
+              </div>
+              <div class="message-envelope">
+                <div></div>
+                <span
+                  ><svg class="icon"><use href="#i-send" /></svg
+                ></span>
+              </div>
+              <span class="aspiration-art-label"
+                >GAGASAN HARI INI, KEBAIKAN ESOK HARI.</span
+              >
+            </div>
+          </div>
         </div>
       </section>
     </main>
     <footer class="landing-footer">
       <div class="landing-shell">
-        <a class="landing-brand" href="./index.html"
-          ><span class="landing-logo"
-            ><img src="./assets/osda-logo.png" alt="" width="40" height="40" /></span
-          ><span>OSDA <b>RQ</b><small>DAYAH RUHUL QURANI</small></span></a
-        >
-        <p>
-          Program tertata. Amanah terjaga.<small
-            >Meulaboh, Aceh Barat · <span id="public-year">2026</span></small
+        <div class="footer-main">
+          <a class="landing-brand" href="./index.html"
+            ><span class="landing-logo"
+              ><img src="./assets/osda-logo.png" alt="" width="48" height="48" /></span
+            ><span class="brand-wordmark"
+              >OSDA <b>RQ</b><small>DAYAH RUHUL QURANI</small></span
+            ></a
           >
-        </p>
-        <a href="./app.html">Ruang pengurus ↗</a>
+          <p>Program tertata.<br /><em>Amanah terjaga.</em></p>
+          <a class="footer-login" href="./app.html"
+            >Sampai jumpa di ruang pengurus.<svg class="icon">
+              <use href="#i-arrow-up" /></svg
+          ></a>
+        </div>
+        <div class="footer-bottom">
+          <span
+            >© <span id="public-year">2026</span> OSDA RQ · Dayah Ruhul
+            Qurani</span
+          ><span>Meulaboh, Aceh Barat</span
+          ><a href="#beranda"
+            >Kembali ke atas<svg class="icon"><use href="#i-arrow-up" /></svg
+          ></a>
+        </div>
       </div>
     </footer>
     <script src="./config.js"></script>
