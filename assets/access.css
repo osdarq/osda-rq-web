@@ -1,0 +1,469 @@
+@import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap");
+#login-screen {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1.06fr 1fr;
+  background: #e2ece5;
+  color: #193f49;
+}
+#login-screen .login-story {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 55px clamp(35px, 5.3vw, 95px);
+  background: #0a2c39;
+  color: #e8ecdc;
+}
+#login-screen .login-story:before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background:
+    linear-gradient(140deg, #061f2bf0 3%, #082936c7 56%, #082936eb),
+    url("./dayah-kubah-cahaya.jpg") center / cover;
+}
+#login-screen .login-story:after {
+  width: 360px;
+  height: 360px;
+  right: -230px;
+  top: 7%;
+  border-color: #d9ca9d29;
+  box-shadow:
+    0 0 0 35px #d9c99d07,
+    0 0 0 70px #d9c99d04;
+}
+#login-screen .login-wordmark {
+  font:
+    800 29px/1 Manrope,
+    sans-serif;
+  letter-spacing: -0.9px;
+  color: #e9ede0;
+  margin-bottom: 48px;
+}
+#login-screen .login-wordmark b {
+  color: #e0bd7d;
+  font-weight: 500;
+}
+#login-screen .login-story .eyebrow {
+  font:
+    700 9px/1.7 Manrope,
+    sans-serif;
+  letter-spacing: 2px;
+  color: #dbc38b;
+}
+#login-screen .login-story h1 {
+  font:
+    600 clamp(32px, 3.7vw, 57px) / 1.2 Manrope,
+    sans-serif;
+  letter-spacing: -1.9px;
+  color: #ecefe4;
+  margin: 20px 0 23px;
+}
+#login-screen .login-story h1 em {
+  font:
+    400 1.4em/1.08 "Instrument Serif",
+    Georgia,
+    serif;
+  letter-spacing: -1px;
+  color: #e7c88c;
+}
+#login-screen .login-story > p {
+  margin: 0;
+  max-width: 390px;
+  color: #c2d3cc;
+  font:
+    400 14px/1.95 Manrope,
+    sans-serif;
+}
+#login-screen .login-pillars {
+  margin: 28px 0;
+  max-width: 380px;
+  border-top-color: #bcc9a63b;
+}
+#login-screen .login-pillars span {
+  color: #dac48b;
+  border-bottom-color: #bcc9a63b;
+  padding: 12px 0;
+  font:
+    500 10px/1.7 Manrope,
+    sans-serif;
+  gap: 16px;
+}
+#login-screen .login-pillars b {
+  font:
+    500 12px/1.7 Manrope,
+    sans-serif;
+  color: #d1dfd0;
+}
+#login-screen .access-verse {
+  margin: 1px 0 24px;
+  padding-left: 16px;
+  border-left: 1px solid #b6bc8b6b;
+  max-width: 380px;
+}
+#login-screen .access-verse p {
+  margin: 0;
+  font:
+    400 26px/1.8 Amiri,
+    serif;
+  color: #e0d9b1;
+}
+#login-screen .access-verse small {
+  display: block;
+  font:
+    500 8px/1.6 Manrope,
+    sans-serif;
+  letter-spacing: 0.6px;
+  margin-top: 4px;
+  color: #bdcebc;
+}
+#login-screen .login-story > small {
+  margin-top: 0;
+  font:
+    400 9px/1.8 Manrope,
+    sans-serif;
+  color: #b2c9c0;
+}
+#login-screen .login-panel {
+  width: min(100%, 484px);
+  margin: auto;
+  padding: 38px 43px;
+  font-family: Manrope, sans-serif;
+}
+#login-screen .login-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 40px;
+  width: max-content;
+  margin: 0 0 25px;
+  padding: 0 4px 0 0;
+  color: #3d6457;
+  font:
+    600 11px/1.5 Manrope,
+    sans-serif;
+  text-decoration: none;
+}
+#login-screen .login-home-link > span {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border: 1px solid #9db8a5;
+  border-radius: 50%;
+  font-size: 15px;
+  background: #d2e1d3;
+  transition:
+    transform 0.25s,
+    background 0.25s;
+}
+#login-screen .login-home-link:hover > span {
+  transform: translateX(-3px);
+  background: #bdd5c3;
+}
+#login-screen .login-home-link:focus-visible {
+  outline: 2px solid #99743c;
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+#login-screen .login-logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border-color: #b2c8b3;
+  background: #d6e4d8;
+  box-shadow: 0 0 0 7px #b7cdb714;
+  margin-bottom: 27px;
+}
+#login-screen .login-logo img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+#login-screen .login-panel .eyebrow {
+  font:
+    700 9px/1.7 Manrope,
+    sans-serif;
+  letter-spacing: 1.5px;
+  color: #4b695a;
+}
+#login-screen .login-panel h2 {
+  font:
+    600 27px/1.4 Manrope,
+    sans-serif;
+  letter-spacing: -1px;
+  color: #20474a;
+  margin: 11px 0;
+}
+#login-screen .login-panel > p {
+  color: #4f6b5e;
+  font-size: 12px;
+  line-height: 1.9;
+}
+#login-screen .login-panel form {
+  margin-top: 25px;
+}
+#login-screen .login-panel .field {
+  color: #3a5f50;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 17px;
+}
+#login-screen .login-panel input {
+  min-height: 49px;
+  padding: 12px 14px;
+  background: #e9eee4;
+  color: #254a40;
+  border: 1px solid #a7c0ac;
+  border-radius: 8px;
+  font:
+    400 14px/1.5 Manrope,
+    sans-serif;
+  box-shadow: 0 2px 3px #244b3d03;
+}
+#login-screen .login-panel input:focus {
+  outline: 0;
+  border-color: #8e7847;
+  box-shadow: 0 0 0 3px #b6a16b24;
+  background: #f0f1e5;
+}
+#login-screen .login-panel .login-submit {
+  min-height: 51px;
+  padding: 13px 17px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #2d5d56;
+  background: #163f45;
+  color: #ece5c9;
+  font:
+    700 12px/1.7 Manrope,
+    sans-serif;
+  box-shadow: 0 4px 0 #092d36;
+  transition:
+    background 0.25s,
+    transform 0.25s;
+}
+#login-screen .login-submit:hover:not(:disabled) {
+  background: #2c5d53;
+  transform: translateY(-1px);
+}
+#login-screen .login-panel .login-help {
+  margin-top: 23px;
+  color: #506b5e;
+  font-size: 10px;
+  line-height: 1.9;
+}
+#login-screen .login-footer {
+  color: #526b5c;
+  font-size: 9px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid #b4c8b5;
+}
+#login-screen .startup-loading {
+  color: #4a685b;
+}
+#login-screen .login-owner-action {
+  color: #3b6252;
+}
+.route-curtain {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 65% 20%, #31554e66, transparent 60%), #092837;
+  color: #e6c68a;
+  pointer-events: none;
+  visibility: hidden;
+  transform: translateY(102%);
+}
+.route-curtain:before,
+.route-curtain:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 370px;
+  height: 370px;
+  border: 1px solid #e1c58b0e;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.route-curtain:after {
+  width: 440px;
+  height: 440px;
+  transform: translate(-50%, -50%) rotate(15deg);
+}
+.route-signature {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  border: 1px solid #d6c08a57;
+  border-radius: 50%;
+}
+.route-signature b {
+  position: relative;
+  color: #e7c98b;
+  font:
+    400 41px/1 "Instrument Serif",
+    Georgia,
+    serif;
+  letter-spacing: -1px;
+}
+.route-ring {
+  position: absolute;
+  inset: -8px;
+  border: 1px solid #b8c8a336;
+  border-top-color: #e9d19b;
+  border-radius: 50%;
+}
+.route-caption {
+  position: relative;
+  font:
+    600 8px/1.7 Manrope,
+    sans-serif;
+  letter-spacing: 2.2px;
+  color: #c4d4c2;
+}
+.osda-route-leaving .route-curtain {
+  visibility: visible;
+  transform: translateY(0);
+  transition: transform 0.36s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.osda-route-arriving .route-curtain {
+  visibility: visible;
+  animation: route-arrive 0.6s cubic-bezier(0.6, 0, 0.2, 1) both;
+}
+@keyframes route-arrive {
+  0%,
+  10% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-102%);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .osda-route-leaving .route-ring,
+  .osda-route-arriving .route-ring {
+    animation: route-ring-turn 1.2s linear infinite;
+  }
+  #login-screen .login-panel {
+    animation: access-enter 0.7s 0.12s ease both;
+  }
+  #login-screen .login-story h1 {
+    animation: access-enter 0.85s 0.1s ease both;
+  }
+  @keyframes route-ring-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes access-enter {
+    from {
+      opacity: 0;
+      translate: 0 14px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+}
+@media (max-width: 1100px) {
+  #login-screen .login-story {
+    padding: 44px 37px;
+  }
+  #login-screen .login-story h1 {
+    font-size: 41px;
+  }
+  #login-screen .login-panel {
+    padding: 35px;
+  }
+  #login-screen .login-wordmark {
+    margin-bottom: 37px;
+  }
+}
+@media (max-width: 760px) {
+  #login-screen {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 20px 16px;
+    background:
+      linear-gradient(140deg, #092837dd, #153e43ed),
+      url("./dayah-kubah-cahaya.jpg") center / cover;
+  }
+  #login-screen .login-story {
+    display: none;
+  }
+  #login-screen .login-panel {
+    width: min(100%, 440px);
+    border: 1px solid #b3c5ae;
+    border-radius: 15px;
+    background: #deeadff2;
+    padding: 25px 27px 30px;
+    box-shadow: 0 20px 50px #00182535;
+  }
+  #login-screen .login-home-link {
+    margin-bottom: 25px;
+  }
+  #login-screen .login-logo {
+    width: 62px;
+    height: 62px;
+    margin-bottom: 25px;
+  }
+  #login-screen .login-logo img {
+    width: 51px;
+    height: 51px;
+  }
+  #login-screen .login-panel h2 {
+    font-size: 25px;
+  }
+  #login-screen .login-panel input {
+    font-size: 16px;
+  }
+  #login-screen .login-footer {
+    margin-top: 25px;
+  }
+}
+@media (max-width: 370px) {
+  #login-screen {
+    padding: 15px 12px;
+  }
+  #login-screen .login-panel {
+    padding: 22px;
+  }
+  #login-screen .login-panel h2 {
+    font-size: 23px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #login-screen *,
+  .route-curtain,
+  .route-curtain * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .route-curtain {
+    display: none;
+  }
+}
+@media print {
+  .route-curtain {
+    display: none !important;
+  }
+}

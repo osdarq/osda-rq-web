@@ -5,11 +5,20 @@ const nav = document.querySelector("#landing-nav");
 const header = document.querySelector("#site-header");
 const progress = document.querySelector(".page-progress > span");
 const backToTop = document.querySelector(".back-to-top");
+const heroSection = document.querySelector(".landing-hero");
+const heroScene = document.querySelector(".hero-backdrop");
 const motionPreference = window.matchMedia?.(
   "(prefers-reduced-motion: reduce)",
 );
 const finePointer = window.matchMedia?.("(hover: hover) and (pointer: fine)");
 let reduceMotion = motionPreference?.matches ?? false;
+let heroInView = true;
+function syncHeroMotion() {
+  heroSection?.style.setProperty(
+    "--hero-play",
+    heroInView && !document.hidden ? "running" : "paused",
+  );
+}
 
 function setMenu(open) {
   menu?.setAttribute("aria-expanded", String(open));
@@ -49,6 +58,11 @@ function paintScroll() {
   const distance = document.documentElement.scrollHeight - window.innerHeight;
   const fraction = distance > 0 ? Math.min(1, Math.max(0, y / distance)) : 0;
   if (progress) progress.style.transform = "scaleX(" + fraction + ")";
+  if (heroScene) {
+    const offset =
+      !reduceMotion && finePointer?.matches ? Math.min(24, y * 0.04) : 0;
+    heroScene.style.setProperty("--scene-offset", offset.toFixed(1) + "px");
+  }
 }
 function queueScroll() {
   if (scrollQueued) return;
@@ -61,9 +75,7 @@ window.addEventListener("scroll", queueScroll, { passive: true });
 window.addEventListener("resize", queueScroll, { passive: true });
 
 const revealElements = [...document.querySelectorAll("[data-reveal]")];
-for (const group of document.querySelectorAll(
-  ".mandate-grid, .process-list, .dayah-gallery",
-)) {
+for (const group of document.querySelectorAll(".mandate-grid")) {
   [...group.children].forEach((element, index) => {
     element.style.setProperty("--reveal-delay", Math.min(index, 2) * 90 + "ms");
   });
@@ -71,6 +83,11 @@ for (const group of document.querySelectorAll(
 if ("IntersectionObserver" in window) {
   const links = [...document.querySelectorAll(".nav-link")];
   const visibility = new Map();
+  const heroObserver = new IntersectionObserver((entries) => {
+    heroInView = entries.some((entry) => entry.isIntersecting);
+    syncHeroMotion();
+  });
+  if (heroSection) heroObserver.observe(heroSection);
   const sectionObserver = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -107,7 +124,6 @@ if ("IntersectionObserver" in window) {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         entry.target.classList.add("is-visible");
-        entry.target.closest(".process-section")?.classList.add("is-in-view");
         observer.unobserve(entry.target);
       }
     },
@@ -163,6 +179,20 @@ motionPreference?.addEventListener?.("change", (event) => {
     document.documentElement.classList.remove("motion-ready");
     revealElements.forEach((element) => element.classList.add("is-visible"));
   }
+  queueScroll();
+});
+
+document.addEventListener("visibilitychange", syncHeroMotion);
+
+// Native details keep the full history usable without JavaScript.
+const historyPeriods = [...document.querySelectorAll("[data-history-period]")];
+historyPeriods.forEach((period) => {
+  period.addEventListener("toggle", () => {
+    if (!period.open) return;
+    historyPeriods.forEach((other) => {
+      if (other !== period && other.open) other.open = false;
+    });
+  });
 });
 
 const photoLinks = [...document.querySelectorAll("[data-photo-view]")];
@@ -181,7 +211,10 @@ function paintPhoto(index) {
   const link = photoLinks[photoIndex];
   viewerImage.src = link.href;
   viewerImage.alt =
-    link.querySelector("img")?.alt || link.dataset.photoTitle || "Foto dayah";
+    link.querySelector("img")?.alt ||
+    link.dataset.photoAlt ||
+    link.dataset.photoTitle ||
+    "Foto dayah";
   viewerTitle.textContent = link.dataset.photoTitle || "Dayah Ruhul Qurani";
   viewerCaption.textContent = link.dataset.photoCaption || "";
   viewerCount.textContent =
