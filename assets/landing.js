@@ -61,7 +61,9 @@ window.addEventListener("scroll", queueScroll, { passive: true });
 window.addEventListener("resize", queueScroll, { passive: true });
 
 const revealElements = [...document.querySelectorAll("[data-reveal]")];
-for (const group of document.querySelectorAll(".mandate-grid, .process-list")) {
+for (const group of document.querySelectorAll(
+  ".mandate-grid, .process-list, .dayah-gallery",
+)) {
   [...group.children].forEach((element, index) => {
     element.style.setProperty("--reveal-delay", Math.min(index, 2) * 90 + "ms");
   });
@@ -161,6 +163,85 @@ motionPreference?.addEventListener?.("change", (event) => {
     document.documentElement.classList.remove("motion-ready");
     revealElements.forEach((element) => element.classList.add("is-visible"));
   }
+});
+
+const photoLinks = [...document.querySelectorAll("[data-photo-view]")];
+const photoViewer = document.querySelector("#photo-viewer");
+const viewerImage = document.querySelector("#photo-viewer-image");
+const viewerTitle = document.querySelector("#photo-viewer-title");
+const viewerCaption = document.querySelector("#photo-viewer-caption");
+const viewerCount = document.querySelector("#photo-viewer-count");
+let photoIndex = 0;
+let photoOpener = null;
+let savedOverflow = "";
+
+function paintPhoto(index) {
+  if (!photoLinks.length || !viewerImage) return;
+  photoIndex = (index + photoLinks.length) % photoLinks.length;
+  const link = photoLinks[photoIndex];
+  viewerImage.src = link.href;
+  viewerImage.alt =
+    link.querySelector("img")?.alt || link.dataset.photoTitle || "Foto dayah";
+  viewerTitle.textContent = link.dataset.photoTitle || "Dayah Ruhul Qurani";
+  viewerCaption.textContent = link.dataset.photoCaption || "";
+  viewerCount.textContent =
+    String(photoIndex + 1).padStart(2, "0") +
+    " / " +
+    String(photoLinks.length).padStart(2, "0");
+}
+photoLinks.forEach((link, index) => {
+  link.addEventListener("click", (event) => {
+    if (
+      typeof photoViewer?.showModal !== "function" ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.altKey
+    )
+      return;
+    event.preventDefault();
+    photoOpener = link;
+    paintPhoto(index);
+    if (!photoViewer.open) {
+      savedOverflow = document.body.style.overflow || "";
+      photoViewer.showModal();
+      document.body.style.overflow = "hidden";
+    }
+  });
+});
+photoViewer
+  ?.querySelector("[data-viewer-close]")
+  ?.addEventListener("click", () => photoViewer.close());
+photoViewer?.querySelectorAll("[data-viewer-step]").forEach((button) => {
+  button.addEventListener("click", () =>
+    paintPhoto(photoIndex + Number(button.dataset.viewerStep)),
+  );
+});
+photoViewer?.addEventListener("keydown", (event) => {
+  if (!photoViewer.open) return;
+  if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+    event.preventDefault();
+    paintPhoto(photoIndex + (event.key === "ArrowRight" ? 1 : -1));
+  }
+  if (event.key === "Escape") {
+    event.preventDefault();
+    photoViewer.close();
+  }
+});
+photoViewer?.addEventListener("click", (event) => {
+  if (event.target !== photoViewer) return;
+  const bounds = photoViewer.getBoundingClientRect();
+  if (
+    event.clientX < bounds.left ||
+    event.clientX > bounds.right ||
+    event.clientY < bounds.top ||
+    event.clientY > bounds.bottom
+  )
+    photoViewer.close();
+});
+photoViewer?.addEventListener("close", () => {
+  document.body.style.overflow = savedOverflow;
+  photoOpener?.focus({ preventScroll: true });
 });
 
 document.querySelector("#public-year").textContent = new Intl.DateTimeFormat(

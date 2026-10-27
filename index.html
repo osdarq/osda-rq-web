@@ -7,9 +7,15 @@
       name="description"
       content="Rumah digital Organisasi Santri Dayah Ruhul Qurani. Mengenal kepengurusan, merawat amanah, dan melangkah bersama."
     />
-    <meta name="theme-color" content="#0a2432" />
+    <meta name="theme-color" content="#092837" />
     <title>OSDA RQ · Satu Amanah, Satu Arah</title>
     <link rel="icon" type="image/png" href="./assets/osda-logo.png" />
+    <link
+      rel="preload"
+      as="image"
+      href="./assets/dayah-masjid-biru.jpg"
+      fetchpriority="high"
+    />
     <link rel="stylesheet" href="./assets/landing.css" />
   </head>
   <body id="beranda">
@@ -69,8 +75,11 @@
           <path d="m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4Z" />
           <path d="m8 11 3 3 5-5" />
         </symbol>
-        <symbol id="i-send" viewBox="0 0 24 24">
-          <path d="m22 2-7 20-4-9-9-4L22 2ZM11 13 22 2" />
+        <symbol id="i-expand" viewBox="0 0 24 24">
+          <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" />
+        </symbol>
+        <symbol id="i-close" viewBox="0 0 24 24">
+          <path d="m6 6 12 12M6 18 18 6" />
         </symbol>
         <symbol id="i-spark" viewBox="0 0 24 24">
           <path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z" />
@@ -107,8 +116,8 @@
           <a class="nav-link is-current" href="#beranda" aria-current="location"
             >Beranda</a
           ><a class="nav-link" href="#tentang">Tentang OSDA</a
-          ><a class="nav-link" href="#amanah">Ruang amanah</a
-          ><a class="nav-link" href="#langkah">Alur organisasi</a>
+          ><a class="nav-link" href="#cerita">Cerita dayah</a
+          ><a class="nav-link" href="#amanah">Ruang amanah</a>
           <a class="landing-nav-login" href="./app.html"
             ><svg aria-hidden="true" class="icon"><use href="#i-user" /></svg
             >Ruang pengurus<svg aria-hidden="true" class="icon">
@@ -165,78 +174,71 @@
               >
             </div>
           </div>
-          <aside
-            class="hero-art"
-            aria-label="Identitas Organisasi Santri Dayah Ruhul Qurani"
-          >
-            <div class="art-ambient" aria-hidden="true"></div>
-            <svg
-              class="art-rosette"
-              viewBox="0 0 500 500"
-              fill="none"
-              aria-hidden="true"
-            >
-              <circle cx="250" cy="250" r="218" />
-              <circle cx="250" cy="250" r="181" />
-              <path
-                d="M250 16 317 183 484 250 317 317 250 484 183 317 16 250 183 183Z"
-              />
-              <path
-                d="m84 84 166 71L416 84l-71 166 71 166-166-71-166 71 71-166Z"
-              />
-              <path d="M250 32v436M32 250h436M96 96l308 308M96 404 404 96" />
-            </svg>
-            <div class="art-orbit" aria-hidden="true">
-              <i></i><i></i><i></i>
+          <aside class="hero-art" aria-label="Dayah dan kepengurusan OSDA RQ">
+            <div class="hero-orbit" aria-hidden="true"></div>
+            <figure class="hero-photo-frame">
+              <a
+                class="hero-photo-link photo-link"
+                href="./assets/dayah-masjid-biru.jpg"
+                data-photo-view
+                data-photo-title="Masjid di Dayah Ruhul Qurani"
+                data-photo-caption="Kubah bercorak biru, langit yang luas, dan ruang keseharian para santri."
+              >
+                <img
+                  class="hero-photo"
+                  src="./assets/dayah-masjid-biru.jpg"
+                  alt="Masjid berkubah biru di Dayah Ruhul Qurani dengan langit berawan dan pegunungan di kejauhan."
+                  width="2048"
+                  height="921"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+                <span class="photo-open"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-expand" /></svg
+                  ><span>Lihat foto</span></span
+                >
+              </a>
+              <figcaption class="hero-photo-caption">
+                <span>DAYAH RUHUL QURANI</span
+                ><strong>Tempat kita <em>bertumbuh.</em></strong
+                ><span class="photo-location"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-pin" /></svg
+                  >Meulaboh · Aceh Barat</span
+                >
+              </figcaption>
+            </figure>
+            <div class="hero-seal" aria-hidden="true">
+              <svg class="seal-ring" viewBox="0 0 100 100">
+                <defs>
+                  <path
+                    id="seal-circle"
+                    d="M50 50 m-40 0 a40 40 0 1 1 80 0 a40 40 0 1 1 -80 0"
+                  />
+                </defs>
+                <text>
+                  <textPath href="#seal-circle">
+                    ORGANISASI SANTRI · DAYAH RUHUL QURANI ·
+                  </textPath>
+                </text>
+              </svg>
+              <img src="./assets/osda-logo.png" alt="" width="50" height="50" />
             </div>
-            <div class="identity-surface" data-tilt="">
-              <div class="identity-surface-line" aria-hidden="true"></div>
-              <div class="identity-top">
-                <span class="identity-logo"
-                  ><img
-                    src="./assets/osda-logo.png"
-                    alt="Lambang OSDA RQ"
-                    width="64"
-                    height="64" /></span
-                ><span>DAYAH<br /><b>RUHUL QURANI</b></span
-                ><span class="identity-star" aria-hidden="true">✦</span>
+            <div class="cabinet-plaque">
+              <div class="cabinet-edition">
+                <span id="public-term-number">03</span
+                ><small>KEPENGURUSAN</small>
               </div>
-              <div class="identity-script" lang="ar" dir="rtl">
-                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-              </div>
-              <div class="identity-title" aria-hidden="true">
-                Ruhul<br /><em>Qurani.</em>
-              </div>
-              <div class="identity-divider" aria-hidden="true">
-                <span></span>✦<span></span>
-              </div>
-              <div class="identity-cabinet">
-                <span>KABINET KEPENGURUSAN</span>
+              <div class="cabinet-identity">
+                <span id="public-period">OSDA RQ KE-3</span>
                 <p id="public-cabinet">Satu kabinet, satu kebersamaan.</p>
+                <small>SANTRIWAN &amp; SANTRIWATI</small>
               </div>
-              <div class="identity-location">
-                <svg class="icon" aria-hidden="true"><use href="#i-pin" /></svg
-                >MEULABOH · ACEH BARAT
-              </div>
+              <svg class="icon cabinet-flower" aria-hidden="true">
+                <use href="#i-spark" />
+              </svg>
             </div>
-            <div class="art-period">
-              <span class="period-number" id="public-term-number">03</span
-              ><span
-                ><small>KEPENGURUSAN</small
-                ><strong id="public-period">OSDA RQ KE-3</strong></span
-              ><span class="period-dot"></span>
-            </div>
-            <div class="art-value value-adab">
-              <svg class="icon" aria-hidden="true"><use href="#i-book" /></svg
-              ><span>Adab sebagai dasar.</span>
-            </div>
-            <div class="art-value value-amanah">
-              <svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg
-              ><span>Amanah sebagai pegangan.</span>
-            </div>
-            <span class="art-caption"
-              >BELAJAR MEMIMPIN · TUMBUH DALAM PENGABDIAN</span
-            >
           </aside>
         </div>
         <div class="landing-shell hero-verse">
@@ -265,19 +267,44 @@
       </section>
       <section class="about-section" id="tentang" aria-labelledby="about-title">
         <div class="landing-shell about-grid">
-          <div class="about-heading" data-reveal="">
+          <figure class="about-media" data-reveal>
+            <div class="about-photo-wrap">
+              <a
+                class="photo-link"
+                href="./assets/dayah-kebersamaan-santri.jpg"
+                data-photo-view
+                data-photo-title="Kebersamaan santri"
+                data-photo-caption="Dari keseharian di dayah, santri belajar bergerak dan tumbuh bersama."
+              >
+                <img
+                  src="./assets/dayah-kebersamaan-santri.jpg"
+                  alt="Para santri berseragam biru berkumpul di halaman bangunan dayah."
+                  width="2048"
+                  height="1152"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="photo-open"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-expand" /></svg
+                  ><span>Lihat foto</span></span
+                >
+              </a>
+              <span class="about-photo-corner" aria-hidden="true">RQ</span>
+            </div>
+            <figcaption class="about-photo-label">
+              <span>KEBERSAMAAN DI DAYAH</span
+              ><strong>Berawal dari keseharian.</strong
+              ><svg class="icon" aria-hidden="true">
+                <use href="#i-people" />
+              </svg>
+            </figcaption>
+          </figure>
+          <div class="about-copy" data-reveal>
             <span class="section-kicker"><i></i>01 / MENGENAL OSDA</span>
             <h2 id="about-title">
-              Bertumbuh dalam<br />kebersamaan.<br /><em
-                >Bergerak dalam amanah.</em
-              >
+              Belajar memimpin.<br /><em>Tumbuh bersama.</em>
             </h2>
-            <span class="about-location"
-              ><svg class="icon"><use href="#i-pin" /></svg>Dayah Ruhul Qurani ·
-              Meulaboh, Aceh Barat</span
-            >
-          </div>
-          <div class="about-copy" data-reveal="">
             <p class="about-lead">
               Kepemimpinan dimulai dari kesediaan untuk mengabdi.
             </p>
@@ -288,22 +315,104 @@
               langkah.
             </p>
             <p>
-              Rumah digital ini membantu pengurus merawat prosesnya: mencatat
-              pelaksanaan, mendengarkan kendala, bermusyawarah, dan menyimpan
-              jejak kerja untuk kepengurusan berikutnya.
+              Rumah digital ini merawat prosesnya: mencatat pelaksanaan,
+              membahas kendala, bermusyawarah, dan menyimpan jejak kerja untuk
+              kepengurusan berikutnya.
             </p>
             <div class="about-principles">
               <span
-                ><svg class="icon"><use href="#i-check" /></svg>Program
-                resmi</span
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-check" /></svg
+                >Program resmi</span
               ><span
-                ><svg class="icon"><use href="#i-check" /></svg>Pendampingan
-                mentor</span
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-check" /></svg
+                >Arahan mentor</span
               ><span
-                ><svg class="icon"><use href="#i-check" /></svg>Kepengurusan
-                berkelanjutan</span
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-check" /></svg
+                >Amanah berkelanjutan</span
               >
             </div>
+          </div>
+        </div>
+      </section>
+      <section class="dayah-section" id="cerita" aria-labelledby="dayah-title">
+        <div class="landing-shell">
+          <div class="section-intro" data-reveal>
+            <div>
+              <span class="section-kicker"><i></i>02 / CERITA DARI DAYAH</span>
+              <h2 id="dayah-title">
+                Di sinilah cerita<br />kita <em>bertumbuh.</em>
+              </h2>
+            </div>
+            <p>
+              Ruang ibadah dan suasana dayah hadir dalam keseharian yang
+              menyatukan langkah para santri.
+            </p>
+          </div>
+          <div class="dayah-gallery">
+            <figure class="dayah-photo dayah-photo-wide" data-reveal>
+              <a
+                class="photo-link"
+                href="./assets/dayah-kubah-cahaya.jpg"
+                data-photo-view
+                data-photo-title="Kubah berbalut cahaya"
+                data-photo-caption="Langit jingga membingkai kubah masjid di Dayah Ruhul Qurani."
+              >
+                <img
+                  src="./assets/dayah-kubah-cahaya.jpg"
+                  alt="Kubah masjid bercorak biru dengan latar langit jingga dan awan berlapis."
+                  width="2048"
+                  height="1536"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="photo-open"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-expand" /></svg
+                  ><span>Lihat foto</span></span
+                >
+              </a>
+              <figcaption>
+                <span class="gallery-index">01 / SUASANA DAYAH</span
+                ><strong>Kubah berbalut <em>cahaya.</em></strong
+                ><span>Dayah Ruhul Qurani</span>
+              </figcaption>
+            </figure>
+            <figure class="dayah-photo dayah-photo-tall" data-reveal>
+              <a
+                class="photo-link"
+                href="./assets/dayah-jamaah.jpg"
+                data-photo-view
+                data-photo-title="Ibadah dalam kebersamaan"
+                data-photo-caption="Suasana para santri menunaikan salat berjamaah di dalam masjid."
+              >
+                <img
+                  src="./assets/dayah-jamaah.jpg"
+                  alt="Para santri berdiri dalam saf salat berjamaah di dalam masjid berornamen geometris."
+                  width="1536"
+                  height="2048"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="photo-open"
+                  ><svg class="icon" aria-hidden="true">
+                    <use href="#i-expand" /></svg
+                  ><span>Lihat foto</span></span
+                >
+              </a>
+              <figcaption>
+                <span class="gallery-index">02 / KESEHARIAN SANTRI</span
+                ><strong>Melangkah dalam<br /><em>kebersamaan.</em></strong
+                ><span>Ibadah berjamaah</span>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="gallery-note">
+            <span class="gallery-note-star" aria-hidden="true">✦</span>
+            <p>Adab sebagai dasar. <strong>Amanah sebagai pegangan.</strong></p>
+            <span>DAYAH RUHUL QURANI</span>
           </div>
         </div>
       </section>
@@ -317,7 +426,7 @@
           <div class="section-intro" data-reveal="">
             <div>
               <span class="section-kicker"
-                ><i></i>02 / RUANG KERJA BERSAMA</span
+                ><i></i>03 / RUANG KERJA BERSAMA</span
               >
               <h2 id="mandate-title">
                 Amanah punya ruang.<br /><em>Langkah punya arah.</em>
@@ -459,7 +568,7 @@
       >
         <div class="landing-shell process-grid">
           <div class="process-heading" data-reveal="">
-            <span class="section-kicker"><i></i>03 / ALUR KEPENGURUSAN</span>
+            <span class="section-kicker"><i></i>04 / ALUR KEPENGURUSAN</span>
             <h2 id="process-title">
               Kepengurusan berganti.<br /><em>Amanah terus berjalan.</em>
             </h2>
@@ -560,6 +669,50 @@
         </div>
       </div>
     </footer>
+    <dialog
+      class="photo-viewer"
+      id="photo-viewer"
+      aria-labelledby="photo-viewer-title"
+      aria-describedby="photo-viewer-caption"
+    >
+      <div class="viewer-top">
+        <span>DOKUMENTASI DAYAH RUHUL QURANI</span
+        ><button
+          type="button"
+          class="viewer-close"
+          data-viewer-close
+          aria-label="Tutup foto"
+        >
+          <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <div class="viewer-stage">
+        <img id="photo-viewer-image" alt="" /><button
+          type="button"
+          class="viewer-nav viewer-previous"
+          data-viewer-step="-1"
+          aria-label="Foto sebelumnya"
+        >
+          <svg class="icon" aria-hidden="true">
+            <use href="#i-arrow" />
+          </svg></button
+        ><button
+          type="button"
+          class="viewer-nav viewer-next"
+          data-viewer-step="1"
+          aria-label="Foto berikutnya"
+        >
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg>
+        </button>
+      </div>
+      <div class="viewer-bottom">
+        <div>
+          <h2 id="photo-viewer-title"></h2>
+          <p id="photo-viewer-caption"></p>
+        </div>
+        <span id="photo-viewer-count" aria-live="polite"></span>
+      </div>
+    </dialog>
     <script src="./config.js"></script>
     <script type="module" src="./assets/landing.js"></script>
     <a class="back-to-top" href="#beranda" aria-label="Kembali ke atas"
