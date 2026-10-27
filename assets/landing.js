@@ -3,7 +3,13 @@ import { request } from "./transport.js";
 const menu = document.querySelector(".landing-menu");
 const nav = document.querySelector("#landing-nav");
 const header = document.querySelector("#site-header");
-const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+const progress = document.querySelector(".page-progress > span");
+const backToTop = document.querySelector(".back-to-top");
+const motionPreference = window.matchMedia?.(
+  "(prefers-reduced-motion: reduce)",
+);
+const finePointer = window.matchMedia?.("(hover: hover) and (pointer: fine)");
+let reduceMotion = motionPreference?.matches ?? false;
 
 function setMenu(open) {
   menu?.setAttribute("aria-expanded", String(open));
@@ -29,36 +35,62 @@ document.addEventListener("click", (event) => {
   if (!header?.contains(event.target)) setMenu(false);
 });
 window
-  .matchMedia?.("(min-width: 761px)")
-  .addEventListener("change", (event) => {
+  .matchMedia?.("(min-width: 901px)")
+  ?.addEventListener?.("change", (event) => {
     if (event.matches) setMenu(false);
   });
-function updateHeader() {
-  header?.classList.toggle("is-scrolled", window.scrollY > 12);
-}
-updateHeader();
-window.addEventListener("scroll", updateHeader, { passive: true });
 
+let scrollQueued = false;
+function paintScroll() {
+  scrollQueued = false;
+  const y = window.scrollY || 0;
+  header?.classList.toggle("is-scrolled", y > 12);
+  backToTop?.classList.toggle("is-visible", y > 650);
+  const distance = document.documentElement.scrollHeight - window.innerHeight;
+  const fraction = distance > 0 ? Math.min(1, Math.max(0, y / distance)) : 0;
+  if (progress) progress.style.transform = "scaleX(" + fraction + ")";
+}
+function queueScroll() {
+  if (scrollQueued) return;
+  scrollQueued = true;
+  if (window.requestAnimationFrame) window.requestAnimationFrame(paintScroll);
+  else paintScroll();
+}
+paintScroll();
+window.addEventListener("scroll", queueScroll, { passive: true });
+window.addEventListener("resize", queueScroll, { passive: true });
+
+const revealElements = [...document.querySelectorAll("[data-reveal]")];
+for (const group of document.querySelectorAll(".mandate-grid, .process-list")) {
+  [...group.children].forEach((element, index) => {
+    element.style.setProperty("--reveal-delay", Math.min(index, 2) * 90 + "ms");
+  });
+}
 if ("IntersectionObserver" in window) {
   const links = [...document.querySelectorAll(".nav-link")];
+  const visibility = new Map();
   const sectionObserver = new IntersectionObserver(
     (entries) => {
-      const visible = entries.filter((entry) => entry.isIntersecting);
-      if (!visible.length) return;
-      const active = visible.sort(
-        (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
-      )[0].target;
-      const targetId = active.classList.contains("landing-hero")
+      for (const entry of entries) {
+        if (entry.isIntersecting)
+          visibility.set(entry.target, entry.boundingClientRect.top);
+        else visibility.delete(entry.target);
+      }
+      const currentSection = [...visibility.keys()].sort(
+        (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
+      )[0];
+      if (!currentSection) return;
+      const id = currentSection.classList.contains("landing-hero")
         ? "beranda"
-        : active.id;
+        : currentSection.id;
       for (const link of links) {
-        const current = link.getAttribute("href") === "#" + targetId;
+        const current = link.getAttribute("href") === "#" + id;
         link.classList.toggle("is-current", current);
         if (current) link.setAttribute("aria-current", "location");
         else link.removeAttribute("aria-current");
       }
     },
-    { rootMargin: "-90px 0px -55% 0px", threshold: 0 },
+    { rootMargin: "-85px 0px -55% 0px", threshold: 0 },
   );
   for (const link of links) {
     const target =
@@ -67,36 +99,86 @@ if ("IntersectionObserver" in window) {
         : document.querySelector(link.getAttribute("href"));
     if (target) sectionObserver.observe(target);
   }
-  if (!reducedMotion?.matches) {
-    document.documentElement.classList.add("motion-ready");
-    const revealObserver = new IntersectionObserver(
-      (entries, observer) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.08, rootMargin: "0px 0px 24px 0px" },
-    );
-    document
-      .querySelectorAll("[data-reveal]")
-      .forEach((element) => revealObserver.observe(element));
-  }
+  if (!reduceMotion) document.documentElement.classList.add("motion-ready");
+  const revealObserver = new IntersectionObserver(
+    (entries, observer) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add("is-visible");
+        entry.target.closest(".process-section")?.classList.add("is-in-view");
+        observer.unobserve(entry.target);
+      }
+    },
+    { threshold: 0.06, rootMargin: "0px 0px 22px 0px" },
+  );
+  revealElements.forEach((element) => revealObserver.observe(element));
 }
+
+const tiltElements = [...document.querySelectorAll("[data-tilt]")];
+for (const element of tiltElements) {
+  let frame = 0;
+  let point = null;
+  function resetTilt() {
+    point = null;
+    if (frame && window.cancelAnimationFrame)
+      window.cancelAnimationFrame(frame);
+    frame = 0;
+    element.style.removeProperty("--tilt-x");
+    element.style.removeProperty("--tilt-y");
+    element.style.removeProperty("--pointer-x");
+    element.style.removeProperty("--pointer-y");
+  }
+  element.addEventListener("pointermove", (event) => {
+    if (reduceMotion || !finePointer?.matches || event.pointerType === "touch")
+      return;
+    point = { x: event.clientX, y: event.clientY };
+    if (frame || !window.requestAnimationFrame) return;
+    frame = window.requestAnimationFrame(() => {
+      frame = 0;
+      if (!point || reduceMotion) return;
+      const bounds = element.getBoundingClientRect();
+      const x = Math.min(
+        1,
+        Math.max(0, (point.x - bounds.left) / bounds.width),
+      );
+      const y = Math.min(
+        1,
+        Math.max(0, (point.y - bounds.top) / bounds.height),
+      );
+      element.style.setProperty("--tilt-x", ((0.5 - y) * 3).toFixed(2) + "deg");
+      element.style.setProperty("--tilt-y", ((x - 0.5) * 3).toFixed(2) + "deg");
+      element.style.setProperty("--pointer-x", (x * 100).toFixed(1) + "%");
+      element.style.setProperty("--pointer-y", (y * 100).toFixed(1) + "%");
+    });
+  });
+  element.addEventListener("pointerleave", resetTilt);
+  element.addEventListener("pointercancel", resetTilt);
+  motionPreference?.addEventListener?.("change", resetTilt);
+}
+motionPreference?.addEventListener?.("change", (event) => {
+  reduceMotion = event.matches;
+  if (reduceMotion) {
+    document.documentElement.classList.remove("motion-ready");
+    revealElements.forEach((element) => element.classList.add("is-visible"));
+  }
+});
 
 document.querySelector("#public-year").textContent = new Intl.DateTimeFormat(
   "en",
   { year: "numeric", timeZone: "Asia/Jakarta" },
 ).format(new Date());
-// The landing page reads public identity only, without loading accounts or archives.
+// Only the public organization identity is read by the landing page.
 if (window.OSDA_CONFIG?.apiUrl) {
   request("boot")
     .then((data) => {
       if (!data.period) return;
-      if (data.period.name != null)
+      if (data.period.name != null) {
+        const name = String(data.period.name);
         document.querySelector("#public-period").textContent =
-          "OSDA RQ KE-" + data.period.name;
+          "OSDA RQ KE-" + name;
+        document.querySelector("#public-term-number").textContent =
+          /^\d{1,2}$/.test(name) ? name.padStart(2, "0") : "RQ";
+      }
       if (data.period.cabinet_name) {
         const cabinet = document.querySelector("#public-cabinet");
         cabinet.textContent = "Kabinet " + data.period.cabinet_name;

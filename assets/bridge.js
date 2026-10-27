@@ -6,7 +6,7 @@ function runner(success, failure) {
       get: (_, name) => {
         if (name === "withSuccessHandler") return (fn) => runner(fn, failure);
         if (name === "withFailureHandler") return (fn) => runner(success, fn);
-        if (!["rpc", "auth", "aspiration"].includes(name))
+        if (!["rpc", "auth"].includes(name))
           return () => failure?.(Error("Tindakan tidak tersedia."));
         return (payload) =>
           request(name, payload)
@@ -22,13 +22,7 @@ try {
   window.OSDA_BOOT = { ...window.OSDA_BOOT, ...boot };
   const script = document.createElement("script");
   script.src = "./assets/client.js";
-  script.onload = () => {
-    if (
-      new URLSearchParams(location.search).get("aspirasi") === "1" &&
-      !window.OSDA_BOOT.needs_admin
-    )
-      document.querySelector(".aspiration-public-launch")?.click();
-  };
+
   script.onerror = () =>
     window.OSDA_STARTUP.fail(
       "Ruang pengurus belum termuat. Muat ulang halaman.",
@@ -38,8 +32,6 @@ try {
   document.querySelector("#startup-loading").hidden = true;
   document.querySelector("#login-submit").disabled = true;
   document.querySelector("#login-error").textContent = e.message;
-  document
-    .querySelectorAll(".aspiration-public-launch")
-    .forEach((b) => (b.hidden = true));
+
   window.OSDA_STARTUP.error = e.message;
 }

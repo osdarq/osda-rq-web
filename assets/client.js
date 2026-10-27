@@ -145,7 +145,7 @@
     },
     {
       title: "Kepengurusan",
-      pages: ["Kepengurusan", "Program Kerja", "Pembinaan", "Aspirasi Santri"],
+      pages: ["Kepengurusan", "Program Kerja", "Pembinaan"],
     },
     { title: "Kegiatan", pages: ["Kalender", "Acara OSDA"] },
     {
@@ -288,13 +288,7 @@
   function pageVisible_(page) {
     if (!state.data) return false;
     if (
-      [
-        "Panduan",
-        "Notifikasi",
-        "Aspirasi Santri",
-        "Persuratan",
-        "Buku Pedoman",
-      ].includes(page) &&
+      ["Panduan", "Notifikasi", "Persuratan", "Buku Pedoman"].includes(page) &&
       OSDA_BOOT.office_ready === false
     )
       return false;
@@ -454,7 +448,7 @@
       Pengaturan: "settings",
       Panduan: "book",
       Notifikasi: "bell",
-      "Aspirasi Santri": "chat",
+
       Persuratan: "clipboard",
       "Buku Pedoman": "book",
     };
@@ -807,8 +801,7 @@
         "Tenggat, rekap, dan arahan yang menjadi tanggung jawab Anda.",
       Panduan: "Petunjuk kerja sesuai jabatan dan penugasan Anda.",
       Notifikasi: "Perkembangan dan pekerjaan yang berkaitan dengan akun Anda.",
-      "Aspirasi Santri":
-        "Dengarkan masukan, berikan tanggapan, dan pantau penyelesaiannya.",
+
       Persuratan:
         "Susun draf, terbitkan nomor, dan cetak surat resmi organisasi.",
       "Buku Pedoman": "Naskah pedoman, sumber resmi, dan versi yang berlaku.",
@@ -855,7 +848,7 @@
       "Tugas Saya": personalView,
       Panduan: officeGuideView_,
       Notifikasi: officeNotificationsView_,
-      "Aspirasi Santri": officeAspirationsView_,
+
       Persuratan: officeLettersView_,
       "Buku Pedoman": officeManualsView_,
       Kalender: calendarView,
@@ -4801,8 +4794,7 @@ const officeUI = {
     noticeRequest: 0,
     lastNoticeAt: 0,
     guideContext: "",
-    publicGeneration: 0,
-    ticket: null,
+
     saving: false,
   };
   const officeButton_ = (label, action, id = "", primary = false) =>
@@ -4891,9 +4883,7 @@ const officeUI = {
   }
   function officeAfterRender_() {
     const ready = OSDA_BOOT.office_ready !== false;
-    document
-      .querySelectorAll(".aspiration-public-launch")
-      .forEach((e) => (e.hidden = !ready || OSDA_BOOT.needs_admin));
+
     if (!ready || !authLive.token) return;
     $("#notification-bell")?.removeAttribute("hidden");
     const context =
@@ -4972,12 +4962,7 @@ const officeUI = {
         `<section class="office-intro"><span class="eyebrow">PANDUAN PENGURUS</span><h2>Kenali alur kerja sesuai amanah Anda.</h2><p>${esc(data.roles.join(" · "))}. Tandai langkah yang sudah dipahami; kemajuan tersimpan untuk akun dan penugasan Anda.</p><div class="office-progress"><span style="width:${Math.round((data.checked.length / data.steps.length) * 100)}%"></span></div><small>${data.checked.length} / ${data.steps.length} langkah dipahami</small></section><div class="office-guide-grid">${data.steps.map((step, i) => `<article class="panel guide-step"><span class="guide-step-number">${String(i + 1).padStart(2, "0")}</span><span class="eyebrow">${esc(step.role || "DASAR PENGGUNAAN")}</span><h3>${esc(step.title)}</h3><p>${esc(step.text)}</p><div class="actions">${pageVisible_(step.page) ? button("Buka " + step.page, "page", step.page) : ""}</div><label class="check-field"><input type="checkbox" data-guide-step value="${esc(step.id)}" ${data.checked.includes(step.id) ? "checked" : ""}><span>Sudah saya pahami</span></label></article>`).join("")}</div><div class="office-save-bar">${officeButton_("Simpan kemajuan panduan", "guide-save", "", true)}</div>`;
     });
   }
-  function officeAspirationsView_() {
-    officeLoad_("aspirationData", (data) => {
-      $("#page").innerHTML =
-        `<div class="toolbar"><p>Aspirasi diterima melalui formulir santri. Tanggapan untuk santri dapat dilihat memakai kode pelacakannya.</p><div class="actions">${officeButton_("Buka formulir santri", "aspiration-public")}${officeButton_("Muat ulang", "aspiration-refresh")}</div></div><div class="office-card-grid">${data.items.map((r) => `<article class="panel aspiration-card"><div class="panel-head"><span class="eyebrow">${esc(r.scope)} · ${esc(r.department || "Umum organisasi")}</span>${badge(r.status)}</div><h3>${esc(r.title)}</h3><p class="prewrap">${esc(r.message)}</p><p class="muted">${esc(r.sender_name || "Anonim")}${r.sender_contact ? " · " + esc(r.sender_contact) : ""} · ${esc(date(r.created_at, true))}</p>${r.response ? `<div class="aspiration-response"><strong>Tanggapan untuk santri</strong><p class="prewrap">${esc(r.response)}</p></div>` : ""}${r.internal_notes ? `<details><summary>Catatan internal</summary><p class="prewrap">${esc(r.internal_notes)}</p></details>` : ""}<div class="actions">${r.can_respond ? officeButton_("Tinjau / tanggapi", "aspiration-edit", r.id) : ""}${r.history.length ? `<details><summary>Riwayat tanggapan</summary>${r.history.map((h) => `<p><strong>${esc(h.status)}</strong> · ${esc(h.actor_name)} · ${esc(date(h.at, true))}<br>${esc(h.response)}</p>`).join("")}</details>` : ""}</div></article>`).join("") || empty("Belum ada aspirasi pada akses ini", "Aspirasi akan muncul sesuai periode, rayon dan bidang yang ditugaskan.")}</div>`;
-    });
-  }
+
   function officeNotificationsView_() {
     officeLoad_("notificationData", (data) => {
       officeUI.notices = data;
@@ -5092,45 +5077,7 @@ const officeUI = {
       r,
     );
   }
-  function publicOfficeRequest_(argument) {
-    return new Promise((resolve, reject) =>
-      google.script.run
-        .withSuccessHandler(resolve)
-        .withFailureHandler((e) => reject(Error(e.message || String(e))))
-        .aspiration(argument),
-    );
-  }
-  async function openPublicAspiration_() {
-    let dialog = $("#public-aspiration-dialog");
-    if (!dialog) {
-      dialog = document.createElement("dialog");
-      dialog.id = "public-aspiration-dialog";
-      dialog.className = "office-dialog";
-      document.body.append(dialog);
-      dialog.addEventListener("close", () => {
-        officeUI.publicGeneration++;
-        officeUI.ticket = null;
-        dialog.replaceChildren();
-      });
-    }
-    const generation = ++officeUI.publicGeneration;
-    officeUI.ticket = null;
-    dialog.innerHTML = `<div class="dialog-heading"><div><span class="eyebrow">SUARA SANTRI · OSDA RQ</span><h2>Kotak aspirasi santri</h2></div>${officeButton_("Tutup", "public-close")}</div>${loadingPanel_("Menyiapkan formulir…")}`;
-    if (!dialog.hasAttribute("open")) dialog.showModal();
-    try {
-      const ticket = await publicOfficeRequest_({ action: "start" });
-      if (
-        generation !== officeUI.publicGeneration ||
-        !dialog.hasAttribute("open")
-      )
-        return;
-      officeUI.ticket = ticket;
-      dialog.innerHTML = `<div class="dialog-heading"><div><span class="eyebrow">SUARA SANTRI · OSDA RQ KE-${esc(ticket.period)}</span><h2>Kotak aspirasi santri</h2></div>${officeButton_("Tutup", "public-close")}</div><p class="muted">Sampaikan masukan dengan bahasa yang baik. Pilih anonim atau sertakan nama. Kode pelacakan pribadi digunakan untuk membaca tanggapan.</p><form id="public-aspiration-form">${officePair_(select("Rayon", "scope", "Santriwan", ticket.scopes), select("Tujuan bidang", "department", "", [{ value: "", label: "Umum organisasi" }, ...ticket.departments]))}${select("Identitas pengirim", "sender_mode", "Anonim", ["Anonim", "Bernama"])}<div id="aspiration-identity" hidden>${officeField_("Nama", "sender_name", "", "text", true)}${officeField_("Kontak (opsional)", "sender_contact", "", "text", true)}</div>${officeField_("Judul aspirasi", "title")}${officeField_("Isi aspirasi", "message", "", "textarea")}<label class="aspiration-honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label><p class="form-error" id="public-aspiration-error" role="alert"></p><button type="submit" class="button">Kirim aspirasi</button></form><details class="aspiration-track"><summary>Sudah memiliki kode? Lacak tanggapan</summary><form id="aspiration-track-form">${officeField_("Kode pelacakan", "code")}<button type="submit" class="button secondary">Lihat tanggapan</button></form><div id="aspiration-track-result" aria-live="polite"></div></details>`;
-    } catch (e) {
-      if (generation === officeUI.publicGeneration)
-        dialog.innerHTML = `<h2>Kotak aspirasi santri</h2><p class="form-error">${esc(e.message)}</p>${officeButton_("Coba lagi", "aspiration-public")}${officeButton_("Tutup", "public-close")}`;
-    }
-  }
+
   async function officeMutation_(method, argument, after) {
     if (officeUI.saving) return;
     officeUI.saving = true;
@@ -5168,11 +5115,6 @@ const officeUI = {
         )
       : () => {};
     try {
-      if (action === "aspiration-public") return await openPublicAspiration_();
-      if (action === "public-close") {
-        $("#public-aspiration-dialog")?.close();
-        return;
-      }
       if (action === "dialog-close") {
         $("#office-dialog")?.close();
         officeUI.editor = null;
@@ -5188,15 +5130,6 @@ const officeUI = {
           "saveGuideProgress",
           { ...state.query, checked, revision: officeUI.guide.revision },
           () => officeGuideView_(),
-        );
-      } else if (action === "aspiration-refresh") officeAspirationsView_();
-      else if (action === "aspiration-edit") {
-        const r = officeUI.data.items.find((r) => r.id === id);
-        openOfficeEditor_(
-          "aspiration",
-          "Tanggapi aspirasi",
-          `<h3>${esc(r.title)}</h3><p class="prewrap">${esc(r.message)}</p>${select("Status penanganan", "status", r.status, OFFICE_ASPIRATION_UI_STATES)}${select("Tujuan bidang", "department", r.department, [{ value: "", label: "Umum organisasi" }, ...state.data.departments])}${officeField_("Tanggapan untuk santri", "response", r.response, "textarea", true, "Tanggapan ini dapat dibaca pengirim melalui kode pelacakannya.")}${officeField_("Catatan internal", "internal_notes", r.internal_notes, "textarea", true, "Bagian ini tidak ditampilkan pada pelacakan santri.")}`,
-          r,
         );
       } else if (action === "notice-refresh") officeNotificationsView_();
       else if (action === "notice-all")
@@ -5351,21 +5284,8 @@ const officeUI = {
       finish();
     }
   });
-  const OFFICE_ASPIRATION_UI_STATES = [
-    "Baru",
-    "Ditinjau",
-    "Diproses",
-    "Selesai",
-  ];
+
   document.addEventListener("change", (event) => {
-    if (event.target.name === "sender_mode") {
-      const wrapper = $("#aspiration-identity");
-      if (wrapper) {
-        wrapper.hidden = event.target.value !== "Bernama";
-        const name = wrapper.querySelector('[name="sender_name"]');
-        name.required = !wrapper.hidden;
-      }
-    }
     if (
       event.target.name === "template_id" &&
       event.target.closest("#office-form") &&
@@ -5405,7 +5325,7 @@ const officeUI = {
         letter: "saveLetter",
         "letter-settings": "saveLetterSettings",
         template: "saveLetterTemplate",
-        aspiration: "respondAspiration",
+
         manual: "saveManual",
         "manual-withdraw": "withdrawManual",
         "letter-cancel": "cancelLetter",
@@ -5421,8 +5341,7 @@ const officeUI = {
         officeUI.editor = null;
         toast("Perubahan tersimpan.");
         officeUI.noticeContext = "";
-        if (ed.type === "aspiration") officeAspirationsView_();
-        else if (ed.type.startsWith("manual")) officeManualsView_();
+        if (ed.type.startsWith("manual")) officeManualsView_();
         else officeLettersView_();
         officeRefreshBell_();
       } catch (e) {
@@ -5432,63 +5351,8 @@ const officeUI = {
         officeUI.saving = false;
         finish();
       }
-    } else if (form.id === "public-aspiration-form") {
-      event.preventDefault();
-      if (!officeUI.ticket || form.dataset.saving) return;
-      form.dataset.saving = "true";
-      const submit = form.querySelector('[type="submit"]');
-      const finish = beginButtonLoading_(submit, "Mengirim aspirasi…");
-      const generation = officeUI.publicGeneration;
-      try {
-        const result = await publicOfficeRequest_({
-          ...officeUI.ticket,
-          ...officeValues_(form),
-          action: "submit",
-        });
-        if (generation !== officeUI.publicGeneration) return;
-        form.innerHTML = `<section class="aspiration-receipt"><span class="eyebrow">ASPIRASI BERHASIL DIKIRIM</span><h3>Terima kasih atas masukannya.</h3><p>Simpan kode pribadi ini untuk melihat status dan tanggapan. Kode tidak ditampilkan kepada pengunjung lain.</p><label class="field">Kode pelacakan<input readonly value="${esc(result.code)}" aria-label="Kode pelacakan aspirasi"></label><p>Status: ${esc(result.status)}</p></section>`;
-        officeUI.ticket = null;
-      } catch (e) {
-        if (generation === officeUI.publicGeneration) {
-          $("#public-aspiration-error").textContent = e.message;
-          delete form.dataset.saving;
-        }
-      } finally {
-        finish();
-      }
-    } else if (form.id === "aspiration-track-form") {
-      event.preventDefault();
-      if (form.dataset.saving) return;
-      form.dataset.saving = "true";
-      const finish = beginButtonLoading_(
-        form.querySelector('[type="submit"]'),
-        "Memeriksa kode…",
-      );
-      const generation = officeUI.publicGeneration,
-        target = $("#aspiration-track-result");
-      target.innerHTML = loadingIndicator_("Memeriksa tanggapan…", "xs");
-      try {
-        const result = await publicOfficeRequest_({
-          action: "track",
-          ...officeValues_(form),
-        });
-        if (generation !== officeUI.publicGeneration) return;
-        target.innerHTML = `<section class="aspiration-response"><h3>${esc(result.title)}</h3>${badge(result.status)}<p class="prewrap">${esc(result.response || "Belum ada tanggapan. Aspirasi sudah tercatat dan menunggu peninjauan.")}</p><small>${esc(date(result.updated_at, true))}</small></section>`;
-      } catch (e) {
-        if (generation === officeUI.publicGeneration)
-          target.textContent = e.message;
-      } finally {
-        delete form.dataset.saving;
-        finish();
-      }
     }
-  });
-  document
-    .querySelectorAll(".aspiration-public-launch")
-    .forEach(
-      (e) =>
-        (e.hidden = OSDA_BOOT.office_ready === false || OSDA_BOOT.needs_admin),
-    );// One archive catalog across Putra/Putri; program/report scopes remain unchanged.
+  });// One archive catalog across Putra/Putri; program/report scopes remain unchanged.
 function archiveCanWrite_(permission, record = {}) {
   if (!state.data) return false;
   if (state.data.access.is_admin) return true;
