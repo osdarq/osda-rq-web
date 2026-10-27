@@ -1,4 +1,26 @@
 (() => {
+  // Directory pages keep formal URLs on static hosting, including old bookmarks.
+  try {
+    const current = new URL(window.location.href);
+    if (["http:", "https:"].includes(current.protocol)) {
+      if (current.pathname.endsWith("/app.html")) {
+        const destination = new URL("./ruang-pengurus/", current);
+        destination.search = current.search;
+        destination.hash = current.hash;
+        window.location.replace(destination.href);
+        return;
+      }
+      if (
+        current.pathname.endsWith("/index.html") &&
+        window.history?.replaceState
+      ) {
+        const canonical = new URL("./", current);
+        canonical.search = current.search;
+        canonical.hash = current.hash;
+        window.history.replaceState(window.history.state, "", canonical.href);
+      }
+    }
+  } catch {}
   const root = document.documentElement;
   const preference = window.matchMedia?.("(prefers-reduced-motion: reduce)");
   const storageKey = "osda.route.v1";

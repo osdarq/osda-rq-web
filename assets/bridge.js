@@ -21,7 +21,7 @@ try {
   const boot = await request("boot");
   window.OSDA_BOOT = { ...window.OSDA_BOOT, ...boot };
   const script = document.createElement("script");
-  script.src = "./assets/client.js";
+  script.src = new URL("./client.js", import.meta.url).href;
 
   script.onerror = () =>
     window.OSDA_STARTUP.fail(

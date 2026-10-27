@@ -92,10 +92,7 @@
     <a class="skip-link" href="#tentang">Lewati ke isi</a>
     <header class="landing-header" id="site-header">
       <div class="landing-shell header-inner">
-        <a
-          class="landing-brand"
-          href="./index.html"
-          aria-label="Beranda OSDA RQ"
+        <a class="landing-brand" href="./" aria-label="Beranda OSDA RQ"
           ><span class="landing-logo"
             ><img
               src="./assets/osda-logo.png"
@@ -121,7 +118,10 @@
           ><a class="nav-link" href="#tentang">Tentang OSDA</a
           ><a class="nav-link" href="#perjalanan">Perjalanan</a
           ><a class="nav-link" href="#amanah">Ruang amanah</a
-          ><a class="landing-nav-login" href="./app.html" data-osda-nav="login"
+          ><a
+            class="landing-nav-login"
+            href="./ruang-pengurus/"
+            data-osda-nav="login"
             ><svg class="icon" aria-hidden="true"><use href="#i-user" /></svg
             >Ruang pengurus<svg class="icon" aria-hidden="true">
               <use href="#i-arrow-up" /></svg
@@ -163,7 +163,10 @@
               memimpin, merawat kebersamaan, dan meninggalkan jejak kebaikan.
             </p>
             <div class="hero-actions">
-              <a class="landing-button" href="./app.html" data-osda-nav="login"
+              <a
+                class="landing-button"
+                href="./ruang-pengurus/"
+                data-osda-nav="login"
                 ><span>Masuk pengurus</span
                 ><span class="button-icon"
                   ><svg class="icon" aria-hidden="true">
@@ -192,37 +195,65 @@
             </div>
           </div>
           <aside class="hero-art" aria-label="Identitas kepengurusan OSDA RQ">
-            <div class="hero-orbit" aria-hidden="true"><i></i><i></i></div>
-            <div class="hero-emblem">
-              <span class="emblem-caption"
-                >BELAJAR MEMIMPIN · TUMBUH MENGABDI</span
+            <div class="identity-card" data-tilt>
+              <svg
+                class="identity-tracery"
+                viewBox="0 0 360 410"
+                preserveAspectRatio="none"
+                aria-hidden="true"
               >
-              <div class="emblem-logo">
-                <img
-                  src="./assets/osda-logo.png"
-                  alt="Lambang OSDA RQ"
-                  width="94"
-                  height="94"
+                <path
+                  class="identity-outline"
+                  d="M28 9H332Q351 9 351 28V382Q351 401 332 401H28Q9 401 9 382V28Q9 9 28 9Z"
                 />
-              </div>
-              <span class="emblem-script" lang="ar" dir="rtl"
-                >بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span
-              >
-              <p>Merawat amanah.<br /><em>Meninggalkan arti.</em></p>
-            </div>
-            <div class="cabinet-plaque">
-              <div class="cabinet-edition">
-                <span id="public-term-number">03</span
-                ><small>KEPENGURUSAN</small>
-              </div>
-              <div class="cabinet-identity">
-                <span id="public-period">OSDA RQ KE-3</span>
-                <p id="public-cabinet">Satu kabinet, satu kebersamaan.</p>
-                <small>SANTRIWAN &amp; SANTRIWATI</small>
-              </div>
-              <svg class="icon cabinet-flower" aria-hidden="true">
-                <use href="#i-spark" />
+                <path
+                  class="identity-tracer"
+                  d="M28 9H332Q351 9 351 28V382Q351 401 332 401H28Q9 401 9 382V28Q9 9 28 9Z"
+                />
               </svg>
+              <div class="identity-sweep" aria-hidden="true"></div>
+              <span class="identity-glint glint-one" aria-hidden="true">✦</span
+              ><span class="identity-glint glint-two" aria-hidden="true"
+                >✦</span
+              >
+              <div class="identity-heading">
+                <div class="identity-logo-wrap">
+                  <span class="identity-logo-orbit" aria-hidden="true"></span
+                  ><img
+                    src="./assets/osda-logo.png"
+                    alt="Lambang OSDA RQ"
+                    width="60"
+                    height="60"
+                  />
+                </div>
+                <div class="identity-brand">
+                  <span>ORGANISASI SANTRI</span><strong>OSDA <em>RQ</em></strong
+                  ><small>DAYAH RUHUL QURANI</small>
+                </div>
+                <span class="identity-mark" aria-hidden="true"
+                  ><svg class="icon"><use href="#i-spark" /></svg
+                ></span>
+              </div>
+              <p class="identity-basmala" lang="ar" dir="rtl">
+                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+              </p>
+              <p class="identity-motto">
+                Merawat amanah.<em>Meninggalkan arti.</em>
+              </p>
+              <div class="identity-cabinet">
+                <div class="identity-edition">
+                  <span id="public-term-number">03</span><small>PERIODE</small>
+                </div>
+                <div class="identity-period">
+                  <span id="public-period">OSDA RQ KE-3</span>
+                  <p id="public-cabinet">Satu kabinet, satu kebersamaan.</p>
+                  <small>SANTRIWAN &amp; SANTRIWATI</small>
+                </div>
+              </div>
+              <div class="identity-values">
+                <span>ADAB</span><i aria-hidden="true"></i><span>AMANAH</span
+                ><i aria-hidden="true"></i><span>PENGABDIAN</span>
+              </div>
             </div>
             <a
               class="hero-background-open"
@@ -527,7 +558,10 @@
                 ><span>Dijalankan</span><i aria-hidden="true">→</i
                 ><span>Dievaluasi</span>
               </div>
-              <a class="feature-link" href="./app.html" data-osda-nav="login"
+              <a
+                class="feature-link"
+                href="./ruang-pengurus/"
+                data-osda-nav="login"
                 >Ruang program<svg class="icon" aria-hidden="true">
                   <use href="#i-arrow-up" /></svg
               ></a>
@@ -548,7 +582,10 @@
                 <p lang="ar" dir="rtl">وَأَمْرُهُمْ شُورَىٰ بَيْنَهُمْ</p>
                 <small>QS. ASY-SYURA · 42:38 · PENGGALAN</small>
               </div>
-              <a class="feature-link" href="./app.html" data-osda-nav="login"
+              <a
+                class="feature-link"
+                href="./ruang-pengurus/"
+                data-osda-nav="login"
                 >Ruang evaluasi<svg class="icon" aria-hidden="true">
                   <use href="#i-arrow-up" /></svg
               ></a>
@@ -570,7 +607,10 @@
                 ><span>Kategori</span><i aria-hidden="true">/</i
                 ><span>Dokumen</span>
               </div>
-              <a class="feature-link" href="./app.html" data-osda-nav="login"
+              <a
+                class="feature-link"
+                href="./ruang-pengurus/"
+                data-osda-nav="login"
                 >Ruang arsip<svg class="icon" aria-hidden="true">
                   <use href="#i-arrow-up" /></svg
               ></a>
@@ -612,7 +652,10 @@
             <h2 id="entry-title">
               Kini, giliranmu<br /><em>meninggalkan arti.</em>
             </h2>
-            <a class="landing-button" href="./app.html" data-osda-nav="login"
+            <a
+              class="landing-button"
+              href="./ruang-pengurus/"
+              data-osda-nav="login"
               ><span>Buka ruang pengurus</span
               ><span class="button-icon"
                 ><svg class="icon" aria-hidden="true">
@@ -625,7 +668,7 @@
     <footer class="landing-footer">
       <div class="landing-shell">
         <div class="footer-main">
-          <a class="landing-brand" href="./index.html"
+          <a class="landing-brand" href="./"
             ><span class="landing-logo"
               ><img src="./assets/osda-logo.png" alt="" width="48" height="48" /></span
             ><span class="brand-wordmark"
@@ -633,7 +676,7 @@
             ></a
           >
           <p>Satu amanah.<br /><em>Satu arah.</em></p>
-          <a class="footer-login" href="./app.html" data-osda-nav="login"
+          <a class="footer-login" href="./ruang-pengurus/" data-osda-nav="login"
             >Ruang pengurus<svg class="icon" aria-hidden="true">
               <use href="#i-arrow-up" /></svg
           ></a>
