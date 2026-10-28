@@ -1,4 +1,7 @@
 import { request } from "./transport.js";
+import { mountLanyard } from "./lanyard.js";
+
+mountLanyard(document.querySelector("[data-lanyard]"));
 
 // Only explicitly published achievements enter the public page. Private drafts never do.
 const achievementAssets = {
