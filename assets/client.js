@@ -147,7 +147,7 @@
       title: "Kepengurusan",
       pages: ["Kepengurusan", "Program Kerja", "Pembinaan"],
     },
-    { title: "Kegiatan", pages: ["Kalender", "Acara OSDA"] },
+    { title: "Kegiatan & Capaian", pages: ["Kalender", "Acara OSDA", "Galeri Capaian"] },
     {
       title: "Evaluasi & Dokumen",
       pages: [
@@ -161,7 +161,7 @@
     },
     {
       title: "Pengelolaan",
-      pages: ["Impor Data", "Akun & Akses", "Cadangan", "Pengaturan"],
+      pages: ["Impor Data", "Kelola Data", "Akun & Akses", "Cadangan", "Pengaturan"],
     },
   ];
   const pages = navigationGroups.flatMap((group) => group.pages);
@@ -302,7 +302,7 @@
         )
       );
 
-    if (["Pengaturan", "Akun & Akses", "Cadangan"].includes(page))
+    if (["Pengaturan", "Kelola Data", "Akun & Akses", "Cadangan"].includes(page))
       return state.data.access.is_admin;
     if (page === "Impor Data")
       return (
@@ -438,6 +438,8 @@
       "Evaluasi Bulanan": "chat",
       "Laporan Bulanan": "clipboard",
       "Acara OSDA": "spark",
+      "Galeri Capaian": "camera",
+      "Kelola Data": "database",
       "Arsip & Surat": "folder",
       Kepengurusan: "structure",
       "Akun & Akses": "shield",
@@ -825,6 +827,8 @@
       "Akun & Akses":
         "Akun pribadi, penugasan yang jelas, dan pergantian pengurus yang tertata.",
       Pembinaan: "Arahan pendamping untuk memperbaiki pelaksanaan program.",
+      "Galeri Capaian": "Dokumentasi terpilih, jejak karya setiap kabinet.",
+      "Kelola Data": "Rapikan data uji, periksa keterkaitan, dan pulihkan bila diperlukan.",
     }[state.page];
     $("#today-label").textContent = new Intl.DateTimeFormat("id-ID", {
       weekday: "long",
@@ -864,9 +868,12 @@
       Pengaturan: settings,
       "Akun & Akses": accounts,
       Pembinaan: mentorNotes,
+      "Galeri Capaian": galleryView_,
+      "Kelola Data": dataManagerView_,
     };
     views[state.page]();
     workspaceAfterRender_();
+    interiorAfterRender_();
     tick();
   }
   function dashboard() {
@@ -1465,7 +1472,7 @@
             ["Pengguna", "Username", "Status", "Tindakan"],
             data.accounts.map(
               (a) =>
-                `<tr><td><strong>${esc(a.name)}</strong></td><td>${esc(a.username)}</td><td>${badge(a.active ? "Aktif" : "Nonaktif")}<small>${a.must_change_password ? "Wajib ganti sandi sementara" : ""}</small></td><td><div class="actions">${button("Ubah akun", "account", a.id)}${button("Reset kata sandi", "resetpassword", a.id)}</div></td></tr>`,
+                `<tr><td><strong>${esc(a.name)}</strong></td><td>${esc(a.username)}</td><td>${badge(a.active ? "Aktif" : "Nonaktif")}<small>${a.must_change_password ? "Wajib ganti sandi sementara" : ""}</small></td><td><div class="actions">${button("Ubah akun", "account", a.id)}${button("Reset kata sandi", "resetpassword", a.id)}${!a.active?manageButton_("Hapus akun","account-delete",a.id,true):""}</div></td></tr>`,
             ),
           )}
           <div class="section-heading"><div><span class="eyebrow">PERAN · RAYON · BIDANG · PERIODE</span><h2>Penugasan akses</h2></div></div>
@@ -2887,6 +2894,7 @@ const authLive = {
     state.requestedFinalVersion = 0;
     if (typeof resetWorkspace_ === "function") resetWorkspace_();
     if (typeof resetOfficeUI_ === "function") resetOfficeUI_();
+    if (typeof resetManagement_ === "function") resetManagement_();
     if (typeof resetArchiveBulk_ === "function") resetArchiveBulk_();
     if (typeof resetRevisionUI_ === "function") resetRevisionUI_();
     state.data = null;
@@ -3629,6 +3637,7 @@ const workUI = {
       `<div class="toolbar"><p>Program menjadi tanggung jawab bidang. Pilih program untuk dicetak sebagai dokumen formal.</p><div class="toolbar-actions">${workButton("Cetak program terpilih / PDF", "program-print")}${button("+ Program kerja", "program", "", "")}${scopesFor("saveProgram").length ? button("Impor Excel", "page", "Impor Data") : ""}</div></div><section class="panel program-selection"><div class="field-pair">${select("Bidang", "program_department", workUI.programDepartment, [{ value: "", label: "Semua bidang yang dapat diakses" }, ...departments], { required: false })}${select("Jenis program", "program_frequency", workUI.programFrequency, [{ value: "", label: "Semua jenis" }, "Harian", "Mingguan", "Bulanan", "Tahunan"], { required: false })}</div><div class="actions">${workButton("Pilih semua yang tampil", "program-select-all")}${workButton("Kosongkan pilihan", "program-select-none")}<strong id="program-selection-count"></strong></div></section>${list.length ? table(["Pilih", "Program", "Jenis / jadwal", "Bidang penanggung jawab", "Pelaksanaan", "Catatan", "Tindakan"], programRows(list, true)) : empty("Belum ada program pada pilihan ini", "Tambahkan program satu per satu atau unggah Excel melalui Impor Data.")}`;
     applyDataLayout_();
     updateProgramSelection_();
+    mountProgramDelete_();
   }
   function programPrintView_() {
     const selected = visiblePrograms_().filter((p) =>
@@ -5351,6 +5360,563 @@ const officeUI = {
         officeUI.saving = false;
         finish();
       }
+    }
+  });
+const OSDA_MEDIA = {
+    masjid: new URL("dayah-masjid-biru.jpg", document.currentScript?.src || document.baseURI || "https://osdarq.github.io/osda-rq-web/assets/client.js").href,
+    kebersamaan: new URL("dayah-kebersamaan-santri.jpg", document.currentScript?.src || document.baseURI || "https://osdarq.github.io/osda-rq-web/assets/client.js").href,
+    jamaah: new URL("dayah-jamaah.jpg", document.currentScript?.src || document.baseURI || "https://osdarq.github.io/osda-rq-web/assets/client.js").href,
+    cahaya: new URL("dayah-kubah-cahaya.jpg", document.currentScript?.src || document.baseURI || "https://osdarq.github.io/osda-rq-web/assets/client.js").href,
+  };
+  const manageUI = {
+    serial: 0,
+    table: "Program",
+    search: "",
+    page: 1,
+    selected: new Set(),
+    data: null,
+    gallery: null,
+    plan: null,
+    editor: null,
+    busy: false,
+    tab: "data",
+  };
+  const workspaceHeroUI = {
+    node: null,
+    observer: null,
+    inView: true,
+    page: "",
+    layout: "",
+    preference: null,
+    initialized: false,
+  };
+  function syncWorkspaceHeroMotion_() {
+    workspaceHeroUI.node?.style.setProperty(
+      "--hero-motion-state",
+      !document.hidden &&
+        workspaceHeroUI.inView &&
+        !$("#workspace")?.hidden &&
+        !workspaceHeroUI.preference?.matches
+        ? "running"
+        : "paused",
+    );
+  }
+  function sizeWorkspaceHero_() {
+    const meaning = $("#hero-meaning");
+    if (!meaning) return;
+    const mode = (window.innerWidth || 1024) <= 760 ? "compact" : "full";
+    if (mode !== workspaceHeroUI.layout) {
+      workspaceHeroUI.layout = mode;
+      meaning.toggleAttribute("open", mode === "full");
+    }
+  }
+  function mountWorkspaceHero_() {
+    const hero = $(".workspace-hero");
+    if (!hero) return;
+    if (!workspaceHeroUI.initialized) {
+      workspaceHeroUI.initialized = true;
+      workspaceHeroUI.node = hero;
+      workspaceHeroUI.preference = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)",
+      );
+      workspaceHeroUI.preference?.addEventListener?.(
+        "change",
+        syncWorkspaceHeroMotion_,
+      );
+      document.addEventListener("visibilitychange", syncWorkspaceHeroMotion_);
+      window.addEventListener("resize", sizeWorkspaceHero_, { passive: true });
+      if (typeof window.IntersectionObserver === "function") {
+        workspaceHeroUI.observer = new window.IntersectionObserver(
+          (entries) => {
+            workspaceHeroUI.inView = entries.some(
+              (entry) => entry.isIntersecting,
+            );
+            syncWorkspaceHeroMotion_();
+          },
+        );
+        workspaceHeroUI.observer.observe(hero);
+      }
+    }
+    sizeWorkspaceHero_();
+    syncWorkspaceHeroMotion_();
+    if (workspaceHeroUI.page !== state.page) {
+      workspaceHeroUI.page = state.page;
+      if (!workspaceHeroUI.preference?.matches && !document.hidden)
+        hero.querySelector(".page-heading")?.animate?.(
+          [
+            { opacity: 0.45, transform: "translateY(5px)" },
+            { opacity: 1, transform: "translateY(0)" },
+          ],
+          { duration: 280, easing: "cubic-bezier(.2,.7,.2,1)" },
+        );
+    }
+  }
+  function resetManagement_() {
+    manageUI.serial++;
+    manageUI.selected.clear();
+    manageUI.data = null;
+    manageUI.gallery = null;
+    manageUI.plan = null;
+    manageUI.editor = null;
+    manageUI.busy = false;
+    $("#manage-dialog")?.close();
+    $("#manage-dialog")?.replaceChildren();
+    manageUI.table = "Program";
+    manageUI.search = "";
+    manageUI.page = 1;
+    manageUI.tab = "data";
+    workspaceHeroUI.page = "";
+    workspaceHeroUI.layout = "";
+    workspaceHeroUI.node?.style.setProperty("--hero-motion-state", "paused");
+  }
+  const manageButton_ = (label, action, id = "", danger = false) =>
+    `<button type="button" class="button secondary small${danger ? " danger-action" : ""}" data-manage="${action}" data-id="${esc(id)}">${esc(label)}</button>`;
+  function manageDialog_(title, body, footer = "") {
+    let d = $("#manage-dialog");
+    if (!d) {
+      d = document.createElement("dialog");
+      d.id = "manage-dialog";
+      d.className = "manage-dialog";
+      document.body.append(d);
+      d.addEventListener("cancel", (e) => {
+        if (manageUI.busy) e.preventDefault();
+      });
+    }
+    d.setAttribute("aria-labelledby", "manage-dialog-title");
+    d.innerHTML = `<header class="manage-dialog-head"><div><span class="eyebrow">OSDA RQ · RUANG PENGURUS</span><h2 id="manage-dialog-title">${esc(title)}</h2></div>${manageButton_("Tutup", "close")}</header>${body}<p class="form-error" id="manage-error" role="alert"></p>${footer}`;
+    if (!d.hasAttribute("open")) d.showModal();
+    return d;
+  }
+  function manageStamp_() {
+    return {
+      serial: ++manageUI.serial,
+      page: state.page,
+      term: state.query.term_id,
+      token: authLive.token,
+    };
+  }
+  function manageCurrent_(s) {
+    return (
+      s.serial === manageUI.serial &&
+      s.page === state.page &&
+      s.term === state.query.term_id &&
+      s.token === authLive.token
+    );
+  }
+  function interiorAfterRender_() {
+    mountWorkspaceHero_();
+    const workspace = $("#workspace");
+    workspace.style.setProperty(
+      "--rq-mosque-photo",
+      `url("${OSDA_MEDIA.masjid}")`,
+    );
+    workspace.style.setProperty(
+      "--rq-community-photo",
+      `url("${OSDA_MEDIA.kebersamaan}")`,
+    );
+    const cabinet = currentPeriod(),
+      note = $(".sidebar-note");
+    if (note)
+      note.innerHTML = `<span class="sidebar-note-mark" aria-hidden="true">✦</span><small>AMANAH KEPENGURUSAN · ${esc(cabinet.name)}</small><p>${esc(cabinet.cabinet_name || "Satu arah pengabdian")}</p><span class="sidebar-cabinet-line">Adab · Amanah · Karya</span>`;
+    if (state.page === "Ringkasan" && !$(".cabinet-welcome")) {
+      const welcome = document.createElement("section");
+      welcome.className = "cabinet-welcome";
+      welcome.innerHTML = `<div class="cabinet-welcome-copy"><span class="eyebrow">RUHUL QURANI · RUMAH PENGABDIAN</span><h2>${esc(cabinet.cabinet_name || "Bersama menjaga amanah.")}</h2><p>Setiap langkah tercatat. Setiap karya menjadi jejak untuk generasi berikutnya.</p><div>${button("Lihat capaian kabinet", "page", "Galeri Capaian")}${button("Program kerja", "page", "Program Kerja")}</div></div><div class="cabinet-welcome-photo"><span>OSDA RQ <b>ke-${esc(cabinet.name)}</b></span></div>`;
+      $("#page").prepend(welcome);
+    }
+    mountProgramDelete_();
+  }
+  function mountProgramDelete_() {
+    if (state.page !== "Program Kerja" || !state.data?.access.is_admin) return;
+    document
+      .querySelectorAll('#page [data-action="program"][data-id]')
+      .forEach((b) => {
+        if (
+          !b.dataset.id ||
+          b.parentElement.querySelector('[data-manage="program-delete"]')
+        )
+          return;
+        b.insertAdjacentHTML(
+          "afterend",
+          manageButton_("Hapus", "program-delete", b.dataset.id, true),
+        );
+      });
+    const actions = $("#page .toolbar-actions");
+    if (
+      actions &&
+      !actions.querySelector('[data-manage="program-delete-selected"]')
+    )
+      actions.insertAdjacentHTML(
+        "beforeend",
+        manageButton_(
+          "Hapus program terpilih",
+          "program-delete-selected",
+          "",
+          true,
+        ),
+      );
+  }
+  async function dataManagerView_() {
+    if (!state.data?.access.is_admin) {
+      $("#page").innerHTML = empty(
+        "Akses dibatasi",
+        "Penghapusan data dikelola Mentor OSDA atau admin.",
+      );
+      return;
+    }
+    const s = manageStamp_();
+    $("#page").innerHTML = loadingPanel_("Memuat pengelolaan data…");
+    try {
+      const data = await api("dataManager", {
+        term_id: s.term,
+        table: manageUI.table,
+        search: manageUI.search,
+        page: manageUI.page,
+      });
+      if (!manageCurrent_(s)) return;
+      manageUI.data = data;
+      manageUI.page = data.page;
+      manageUI.selected.clear();
+      paintDataManager_();
+    } catch (e) {
+      if (manageCurrent_(s))
+        $("#page").innerHTML = empty("Daftar belum dapat dimuat", e.message);
+    }
+  }
+  function paintDataManager_() {
+    const d = manageUI.data;
+    if (!d) return;
+    $("#page").innerHTML =
+      `<section class="management-intro"><span class="management-icon">${symbol("database")}</span><div><span class="eyebrow">DATA RAPI · AMANAH TERJAGA</span><h2>Ruang merapikan data</h2><p>Pilih catatan uji, periksa data terkait, lalu pindahkan ke tempat sampah. Nomor surat yang pernah terbit tetap dicadangkan.</p></div></section><div class="manage-tabs" role="group" aria-label="Tampilan pengelolaan">${manageButton_("Data organisasi", "tab-data")}${manageButton_("Tempat sampah (" + d.trash.length + ")", "tab-trash")}</div>${
+        manageUI.tab === "trash"
+          ? paintDataTrash_(d)
+          : `<section class="panel"><div class="manage-filters">${select("Jenis data", "manage_table", d.table, d.types)}<label class="field">Cari catatan<input id="manage-search" value="${esc(manageUI.search)}" placeholder="Nama, judul, atau bidang" maxlength="200"></label>${manageButton_("Cari", "search")}</div><div class="manage-batch"><label><input type="checkbox" id="manage-select-page"> Pilih yang tampil (maks. 25)</label><span id="manage-selection-count">0 dipilih</span>${manageButton_("Hapus pilihan", "delete-selected", "", true)}</div><p class="manage-help">${d.total} catatan · periode yang dipilih di bagian atas. Akun dikelola melalui Akun &amp; Akses; riwayat aktivitas tetap tercatat.</p>${
+              d.items.length
+                ? table(
+                    ["Pilih", "Catatan", "Bidang / konteks", "Tindakan"],
+                    d.items.map(
+                      (r) =>
+                        `<tr><td><input type="checkbox" data-manage-check="${esc(r.id)}" aria-label="Pilih ${esc(r.title)}"></td><td><strong>${esc(r.title)}</strong><small>${esc(r.detail)}</small></td><td>${esc(r.department || "Umum")}<small>${esc(r.scope)}</small></td><td>${manageButton_("Hapus", "delete-one", r.id, true)}</td></tr>`,
+                    ),
+                  )
+                : empty(
+                    "Belum ada catatan",
+                    "Pilih jenis data atau kata pencarian lain.",
+                  )
+            }<div class="manage-pagination">${manageButton_("← Sebelumnya", "prev")}<span>Halaman ${d.page} / ${d.pages}</span>${manageButton_("Berikutnya →", "next")}</div></section>`
+      }`;
+    const tabs = [...document.querySelectorAll(".manage-tabs [data-manage]")];
+    tabs.forEach((b) =>
+      b.setAttribute(
+        "aria-pressed",
+        String(b.dataset.manage === "tab-" + manageUI.tab),
+      ),
+    );
+  }
+  function paintDataTrash_(d) {
+    return `<section class="panel"><p class="manage-help">Pulihkan seluruh kelompok agar hubungan antarcatatan tetap lengkap. Hapus permanen mengosongkan catatan dari tempat sampah; berkas Drive tetap tersedia untuk cadangan lama.</p>${
+      d.trash.length
+        ? table(
+            ["Catatan dihapus", "Rincian", "Tindakan"],
+            d.trash.map(
+              (r) =>
+                `<tr><td><strong>${esc(r.title)}</strong><small>${esc(r.reason)}</small></td><td>${r.count} catatan terkait<small>${esc(r.deleted_by)} · ${esc(r.deleted_at.slice(0, 10))}</small></td><td><div class="actions">${manageButton_("Pulihkan", "restore", r.id)}${manageButton_("Hapus permanen", "purge", r.id, true)}</div></td></tr>`,
+            ),
+          )
+        : empty(
+            "Tempat sampah kosong",
+            "Data yang dihapus akan muncul di sini.",
+          )
+    }</section>`;
+  }
+  async function previewDeleteUI_(tableName, ids) {
+    if (!ids.length) {
+      toast("Pilih catatan yang akan dihapus.");
+      return;
+    }
+    if (ids.length > 25) {
+      toast("Pilih maksimal 25 catatan dalam satu penghapusan.");
+      return;
+    }
+    const token = authLive.token,
+      term = state.query.term_id,
+      plan = await api("previewDataTrash", { table: tableName, ids });
+    if (token !== authLive.token || term !== state.query.term_id) return;
+    manageUI.plan = plan;
+    manageDialog_(
+      "Periksa penghapusan",
+      `<form data-manage-form="trash"><div class="manage-warning"><strong>${esc(plan.title)}</strong><p>${plan.total} catatan akan dipindahkan bersama data yang bergantung padanya.</p></div><ul class="delete-counts">${plan.counts.map((r) => `<li><span>${esc(r.label)}</span><b>${r.count}</b></li>`).join("")}</ul><label class="field">Alasan penghapusan<textarea name="reason" required maxlength="500" placeholder="Contoh: data uji sebelum pemakaian resmi" rows="3"></textarea></label><button class="button danger-action" type="submit">Pindahkan ke tempat sampah</button></form>`,
+    );
+  }
+  async function galleryView_() {
+    const s = manageStamp_();
+    $("#page").innerHTML = loadingPanel_("Menyiapkan galeri capaian…");
+    try {
+      const d = await api("galleryData", state.query);
+      if (!manageCurrent_(s)) return;
+      manageUI.gallery = d;
+      $("#page").innerHTML =
+        `<section class="gallery-heading"><div><span class="eyebrow">JEJAK KARYA · ESTAFET AMANAH</span><h2>Cerita dari setiap pengabdian.</h2><p>${esc(currentPeriod().cabinet_name || "Kabinet OSDA RQ")} · dokumentasi kegiatan dan hasil pelaksanaan.</p></div>${d.can_edit ? manageButton_("+ Tambah capaian", "gallery-new") : ""}${d.public_url ? `<a class="button secondary small" href="${esc(d.public_url)}" target="_blank" rel="noopener">Lihat galeri umum ↗</a>` : ""}</section>${d.items.length ? `<div class="achievement-grid">${d.items.map((r) => `<article class="achievement-card"><button class="achievement-image" data-manage="gallery-photo" data-id="${esc(r.id)}" aria-label="Perbesar foto ${esc(r.title)}"><img src="${esc(OSDA_MEDIA[r.photo_key] || OSDA_MEDIA.kebersamaan)}" alt="${esc(r.title)}" loading="lazy" data-gallery-image="${esc(r.id)}"><span class="achievement-status ${r.status === "Terbit" ? "is-published" : ""}">${esc(r.status)}</span><span class="achievement-zoom" aria-hidden="true">↗</span></button><div class="achievement-copy"><span class="eyebrow">${esc(r.department || "KARYA BERSAMA")} · ${esc(r.date)}</span><h3>${esc(r.title)}</h3><p>${esc(r.summary)}</p><div class="actions">${d.can_edit ? manageButton_("Ubah", "gallery-edit", r.id) : ""}${d.can_publish ? manageButton_(r.status === "Terbit" ? "Tarik publikasi" : "Terbitkan", "gallery-publish", r.id) : ""}${state.data.access.is_admin ? manageButton_("Hapus", "gallery-delete", r.id, true) : ""}</div></div></article>`).join("")}</div>` : empty("Capaian kabinet belum ditambahkan", "Tambahkan foto, judul kegiatan, dan hasil singkatnya. Publikasi dipilih Mentor OSDA/admin.")}`;
+      for (const r of d.items.filter((x) => x.file_id)) {
+        try {
+          const photo = await api("getGalleryPhoto", { id: r.id });
+          if (!manageCurrent_(s)) return;
+          const img = [
+            ...document.querySelectorAll("[data-gallery-image]"),
+          ].find((x) => x.dataset.galleryImage === r.id);
+          if (img) img.src = galleryImageURL_(photo, r.photo_key);
+        } catch (e) {
+          if (manageCurrent_(s)) toast("Salah satu foto belum dapat dimuat.");
+        }
+      }
+    } catch (e) {
+      if (manageCurrent_(s))
+        $("#page").innerHTML = empty("Galeri belum dapat dimuat", e.message);
+    }
+  }
+  function galleryImageURL_(p, key) {
+    return p?.base64 &&
+      ["image/jpeg", "image/png", "image/webp"].includes(p.mime)
+      ? `data:${p.mime};base64,${p.base64}`
+      : OSDA_MEDIA[p?.photo_key || key] || OSDA_MEDIA.kebersamaan;
+  }
+  function galleryEditor_(r) {
+    r = r || {
+      id: clientId(),
+      revision: 0,
+      term_id: state.query.term_id,
+      date: new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Jakarta",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date()),
+      photo_key: "kebersamaan",
+    };
+    manageUI.editor = { ...r };
+    const f = officeField_;
+    manageDialog_(
+      r.revision ? "Ubah capaian kabinet" : "Capaian baru",
+      `<form data-manage-form="gallery"><p class="manage-help">Simpan sebagai draf, lalu pilih Terbitkan untuk menampilkannya di halaman umum. Mengubah capaian terbit akan mengembalikannya ke draf.</p>${f("Judul kegiatan / capaian", "title", r.title || "")}${f("Hasil singkat kegiatan", "summary", r.summary || "", "textarea")}${officePair_(f("Tanggal kegiatan", "date", r.date, "date"), select("Bidang pelaksana", "department", r.department || "", [{ value: "", label: "Kegiatan bersama" }, "Formatur", ...state.data.departments], { required: false }))}${select(
+        "Foto Dayah sebagai pilihan",
+        "photo_key",
+        r.photo_key,
+        [
+          { value: "kebersamaan", label: "Kebersamaan santri" },
+          { value: "masjid", label: "Masjid Ruhul Qurani" },
+          { value: "jamaah", label: "Kegiatan berjamaah" },
+          { value: "cahaya", label: "Dayah & langit jingga" },
+        ],
+      )}<label class="field">Unggah foto kegiatan sendiri (opsional)<input name="gallery_file" type="file" accept="image/jpeg,image/png,image/webp"><small>Foto diperkecil di perangkat sebelum diunggah. Maksimal hasil unggahan 800 KB.</small></label>${r.file_id ? '<label class="manage-help"><input type="checkbox" name="use_preset"> Ganti foto unggahan lama dengan pilihan foto Dayah di atas</label>' : ""}<button class="button" type="submit">Simpan draf capaian</button></form>`,
+    );
+  }
+  async function resizeGalleryPhoto_(file) {
+    if (file.size > 15 * 1024 * 1024) throw Error("Pilih foto di bawah 15 MB.");
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type))
+      throw Error("Gunakan foto JPG, PNG, atau WebP.");
+    const url = URL.createObjectURL(file);
+    try {
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+      const scale = Math.min(1, 1400 / img.width, 1100 / img.height),
+        canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const context = canvas.getContext("2d");
+      if (!context) throw Error("Perangkat belum mendukung pengolahan foto.");
+      context.fillStyle = "#e8eee9";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      let data = canvas.toDataURL("image/jpeg", 0.84);
+      if (data.length > 1080000) data = canvas.toDataURL("image/jpeg", 0.66);
+      if (data.length > 1080000)
+        throw Error("Foto masih terlalu besar. Pilih foto lain.");
+      return { mime: "image/jpeg", base64: data.split(",")[1] };
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+  document.addEventListener("change", (e) => {
+    if (e.target.name === "manage_table") {
+      manageUI.table = e.target.value;
+      manageUI.page = 1;
+      dataManagerView_();
+    }
+    if (e.target.id === "manage-select-page") {
+      manageUI.selected.clear();
+      if (e.target.checked)
+        manageUI.data.items
+          .slice(0, 25)
+          .forEach((r) => manageUI.selected.add(r.id));
+      document
+        .querySelectorAll("[data-manage-check]")
+        .forEach(
+          (x) => (x.checked = manageUI.selected.has(x.dataset.manageCheck)),
+        );
+    }
+    if (e.target.matches("[data-manage-check]")) {
+      if (e.target.checked) {
+        if (manageUI.selected.size >= 25) {
+          e.target.checked = false;
+          toast("Maksimal 25 catatan.");
+        } else manageUI.selected.add(e.target.dataset.manageCheck);
+      } else manageUI.selected.delete(e.target.dataset.manageCheck);
+    }
+    if ($("#manage-selection-count"))
+      $("#manage-selection-count").textContent =
+        manageUI.selected.size + " dipilih";
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.target.id === "manage-search" && e.key === "Enter") {
+      e.preventDefault();
+      manageUI.search = e.target.value;
+      manageUI.page = 1;
+      dataManagerView_();
+    }
+  });
+  document.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-manage]");
+    if (!b || manageUI.busy || !authLive.token) return;
+    const a = b.dataset.manage,
+      id = b.dataset.id;
+    if (a === "close") {
+      $("#manage-dialog")?.close();
+      return;
+    }
+    manageUI.busy = true;
+    const finish = beginButtonLoading_(b, "Memproses…");
+    try {
+      if (a === "search") {
+        manageUI.search = $("#manage-search").value;
+        manageUI.page = 1;
+        await dataManagerView_();
+      } else if (a === "prev" || a === "next") {
+        manageUI.page = Math.max(
+          1,
+          Math.min(
+            manageUI.data.pages,
+            manageUI.page + (a === "next" ? 1 : -1),
+          ),
+        );
+        await dataManagerView_();
+      } else if (a === "tab-data" || a === "tab-trash") {
+        manageUI.tab = a.slice(4);
+        paintDataManager_();
+      } else if (a === "delete-one" || a === "delete-selected")
+        await previewDeleteUI_(
+          manageUI.table,
+          a === "delete-one" ? [id] : [...manageUI.selected],
+        );
+      else if (a === "program-delete" || a === "program-delete-selected")
+        await previewDeleteUI_(
+          "Program",
+          a === "program-delete"
+            ? [id]
+            : visiblePrograms_()
+                .filter((p) => workUI.programSelection.has(p.id))
+                .map((p) => p.id),
+        );
+      else if (a === "restore") {
+        await api("restoreData", { id });
+        toast("Data beserta catatan terkait dipulihkan.");
+        await load();
+      } else if (a === "account-delete") {
+        manageUI.plan = { id };
+        manageDialog_(
+          "Hapus akun nonaktif",
+          `<form data-manage-form="account"><p>Akun beserta sesi dan hak aksesnya dihapus permanen. Nama pada struktur organisasi dan catatan kegiatan tetap tersimpan.</p><label class="field">Ketik HAPUS AKUN<input name="confirmation" required autocomplete="off"></label><button class="button danger-action" type="submit">Hapus akun nonaktif</button></form>`,
+        );
+      } else if (a === "purge") {
+        manageUI.plan = { id };
+        manageDialog_(
+          "Hapus permanen",
+          `<form data-manage-form="purge"><p>Catatan dalam kelompok ini tidak dapat dipulihkan melalui tempat sampah setelah dihapus permanen. Berkas Drive tetap tersedia bagi cadangan yang sudah dibuat.</p><label class="field">Ketik HAPUS PERMANEN<input name="confirmation" required autocomplete="off"></label><button class="button danger-action" type="submit">Hapus permanen</button></form>`,
+        );
+      } else if (a === "gallery-new") galleryEditor_();
+      else if (a === "gallery-edit")
+        galleryEditor_(manageUI.gallery.items.find((r) => r.id === id));
+      else if (a === "gallery-publish") {
+        const r = manageUI.gallery.items.find((r) => r.id === id);
+        await api("setGalleryPublication", {
+          id,
+          revision: r.revision,
+          published: r.status !== "Terbit",
+        });
+        toast(
+          r.status === "Terbit"
+            ? "Publikasi ditarik."
+            : "Capaian diterbitkan di halaman umum.",
+        );
+        await galleryView_();
+      } else if (a === "gallery-delete") await previewDeleteUI_("Galeri", [id]);
+      else if (a === "gallery-photo") {
+        const r = manageUI.gallery.items.find((r) => r.id === id),
+          token = authLive.token,
+          photo = await api("getGalleryPhoto", { id });
+        if (token !== authLive.token) return;
+        manageDialog_(
+          r.title,
+          `<img class="gallery-full-photo" src="${esc(galleryImageURL_(photo, r.photo_key))}" alt="${esc(r.title)}"><p>${esc(r.summary)}</p>`,
+        );
+      }
+    } catch (err) {
+      toast(err.message);
+    } finally {
+      manageUI.busy = false;
+      finish();
+    }
+  });
+  document.addEventListener("submit", async (e) => {
+    const form = e.target.closest("[data-manage-form]");
+    if (!form) return;
+    e.preventDefault();
+    if (manageUI.busy || !authLive.token) return;
+    manageUI.busy = true;
+    const token = authLive.token,
+      b = form.querySelector('[type="submit"]'),
+      finish = beginButtonLoading_(b, "Menyimpan…");
+    try {
+      const p = officeValues_(form),
+        kind = form.dataset.manageForm;
+      if (kind === "trash")
+        await api("setDataTrash", { ...manageUI.plan, reason: p.reason });
+      else if (kind === "purge")
+        await api("purgeData", {
+          id: manageUI.plan.id,
+          confirmation: p.confirmation,
+        });
+      else if (kind === "account")
+        await api("deleteAccount", {
+          id: manageUI.plan.id,
+          confirmation: p.confirmation,
+        });
+      else if (kind === "gallery") {
+        const r = manageUI.editor,
+          file = form.querySelector('[name="gallery_file"]').files?.[0];
+        const upload = file ? await resizeGalleryPhoto_(file) : undefined;
+        if (token !== authLive.token) return;
+        await api("saveGallery", { ...r, ...p, upload });
+      }
+      if (token !== authLive.token) return;
+      $("#manage-dialog").close();
+      toast(
+        kind === "gallery"
+          ? "Draf capaian tersimpan."
+          : kind === "purge"
+            ? "Tempat sampah dibersihkan."
+            : kind === "account"
+              ? "Akun nonaktif dihapus."
+              : "Data dipindahkan ke tempat sampah.",
+      );
+      workUI.programContext = "";
+      await load();
+    } catch (err) {
+      if (token === authLive.token && $("#manage-error"))
+        $("#manage-error").textContent = err.message;
+    } finally {
+      manageUI.busy = false;
+      finish();
     }
   });// One archive catalog across Putra/Putri; program/report scopes remain unchanged.
 function archiveCanWrite_(permission, record = {}) {

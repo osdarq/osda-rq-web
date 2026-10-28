@@ -4090,3 +4090,202 @@ button:focus-visible {
     display: none;
   }
 }
+/* Published cabinet achievements. Empty galleries take no space. */
+.public-achievements {
+  padding: 90px 0;
+  background: #dfe8dd;
+  border-top: 1px solid #b8ccba;
+}
+.public-achievements[hidden] {
+  display: none !important;
+}
+.public-achievements > .landing-container {
+  width: min(1240px, calc(100% - 80px));
+  margin: auto;
+}
+.achievements-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 40px;
+  margin-bottom: 35px;
+}
+.achievements-heading h2 {
+  font:
+    400 clamp(38px, 5vw, 66px) / 1.07 "Instrument Serif",
+    Georgia,
+    serif;
+  color: #123d34;
+  margin: 15px 0 0;
+}
+.achievements-heading h2 em {
+  color: #54734e;
+}
+.achievements-heading > p {
+  max-width: 310px;
+  font-size: 12px;
+  line-height: 1.9;
+  color: #607363;
+}
+.public-achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+}
+.public-achievement {
+  min-width: 0;
+  border: 1px solid #b8cbb8;
+  border-radius: 17px;
+  overflow: hidden;
+  background: #eaf0e3;
+  box-shadow: 0 8px 26px #1744320c;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+.public-achievement:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 35px #17443218;
+}
+.public-achievement-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  background: #0d303a;
+  padding: 0;
+  border: 0;
+  cursor: zoom-in;
+}
+.public-achievement-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.75s;
+}
+.public-achievement:hover img {
+  transform: scale(1.045);
+}
+.public-achievement-copy {
+  padding: 24px;
+}
+.public-achievement-copy > span {
+  font-size: 8px;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #7c7750;
+}
+.public-achievement-copy h3 {
+  font:
+    700 18px/1.45 Manrope,
+    sans-serif;
+  color: #204d40;
+  margin: 12px 0 10px;
+  overflow-wrap: anywhere;
+}
+.public-achievement-copy p {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #627566;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+.public-achievement-copy small {
+  display: block;
+  border-top: 1px solid #c1d3bd;
+  margin-top: 20px;
+  padding-top: 13px;
+  color: #5e7d5e;
+  font-size: 9px;
+}
+.achievement-viewer {
+  width: min(1000px, calc(100% - 28px));
+  max-height: 92dvh;
+  margin: auto;
+  padding: 24px;
+  border: 1px solid #87aba1;
+  border-radius: 18px;
+  background: #0d303c;
+  color: #e7ebd8;
+  overflow: auto;
+}
+.achievement-viewer::backdrop {
+  background: #041a24df;
+  backdrop-filter: blur(7px);
+}
+.achievement-viewer > button {
+  display: block;
+  margin-left: auto;
+  color: #e8e9d1;
+  border: 1px solid #acc7ac57;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  background: #bedecb0b;
+  font-size: 25px;
+  cursor: pointer;
+}
+.achievement-viewer img {
+  display: block;
+  width: 100%;
+  max-height: 65dvh;
+  object-fit: contain;
+  margin: 15px 0;
+  border-radius: 8px;
+}
+.achievement-viewer h2 {
+  font-size: 22px;
+  margin: 15px 0;
+}
+.achievement-viewer p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #bdd1c4;
+  white-space: pre-line;
+}
+@media (max-width: 900px) {
+  .public-achievements-grid {
+    gap: 15px;
+  }
+  .public-achievement-copy {
+    padding: 19px;
+  }
+  .achievements-heading {
+    gap: 25px;
+  }
+}
+@media (max-width: 600px) {
+  .public-achievements {
+    padding: 55px 0;
+  }
+  .public-achievements > .landing-container {
+    width: calc(100% - 36px);
+  }
+  .public-achievements-grid {
+    grid-template-columns: 1fr;
+    gap: 23px;
+  }
+  .achievements-heading {
+    display: block;
+  }
+  .achievements-heading > p {
+    margin-top: 18px;
+  }
+  .public-achievement-copy p {
+    font-size: 12px;
+  }
+  .public-achievement-copy > span {
+    font-size: 9px;
+  }
+  .public-achievement-copy {
+    padding: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .public-achievement,
+  .public-achievement-image img {
+    transition: none;
+    transform: none !important;
+  }
+}

@@ -1,5 +1,85 @@
 import { request } from "./transport.js";
 
+// Only explicitly published achievements enter the public page. Private drafts never do.
+const achievementAssets = {
+  masjid: "./assets/dayah-masjid-biru.jpg",
+  kebersamaan: "./assets/dayah-kebersamaan-santri.jpg",
+  jamaah: "./assets/dayah-jamaah.jpg",
+  cahaya: "./assets/dayah-kubah-cahaya.jpg",
+};
+const achievementURLs = new Map();
+function paintAchievements(items) {
+  const section = document.querySelector("#capaian"),
+    list = document.querySelector("#public-achievements-list");
+  if (!section || !list || !Array.isArray(items)) return;
+  list.replaceChildren();
+  for (const row of items.slice(0, 3)) {
+    const card = document.createElement("article");
+    card.className = "public-achievement";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "public-achievement-image";
+    button.setAttribute("aria-label", "Perbesar foto " + row.title);
+    const img = document.createElement("img");
+    img.alt = row.title;
+    img.loading = "lazy";
+    img.src = achievementAssets[row.photo_key] || achievementAssets.kebersamaan;
+    button.append(img);
+    button.addEventListener("click", () => {
+      const viewer = document.querySelector("#achievement-viewer");
+      if (!viewer?.showModal) return;
+      document.querySelector("#achievement-viewer-image").src = img.src;
+      document.querySelector("#achievement-viewer-image").alt = row.title;
+      document.querySelector("#achievement-viewer-title").textContent =
+        row.title;
+      document.querySelector("#achievement-viewer-description").textContent =
+        row.summary;
+      viewer.showModal();
+    });
+    const copy = document.createElement("div");
+    copy.className = "public-achievement-copy";
+    const tag = document.createElement("span");
+    tag.textContent = [row.department || "Karya bersama", row.date]
+      .filter(Boolean)
+      .join(" · ");
+    const title = document.createElement("h3");
+    title.textContent = row.title;
+    const summary = document.createElement("p");
+    summary.textContent = row.summary;
+    const cabinet = document.createElement("small");
+    cabinet.textContent = row.cabinet_name || "OSDA RQ ke-" + row.period;
+    copy.append(tag, title, summary, cabinet);
+    card.append(button, copy);
+    list.append(card);
+    achievementURLs.set(row.id, img);
+    if (row.has_photo && window.OSDA_CONFIG?.apiUrl)
+      request("galleryPhoto", { id: row.id })
+        .then((photo) => {
+          if (
+            photo.base64 &&
+            ["image/jpeg", "image/png", "image/webp"].includes(photo.mime)
+          )
+            img.src = `data:${photo.mime};base64,${photo.base64}`;
+        })
+        .catch(() => {});
+  }
+  section.hidden = !list.childElementCount;
+}
+document
+  .querySelector("#achievement-viewer-close")
+  ?.addEventListener("click", () =>
+    document.querySelector("#achievement-viewer").close(),
+  );
+document
+  .querySelector("#achievement-viewer")
+  ?.addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) e.currentTarget.close();
+  });
+if (window.OSDA_CONFIG?.apiUrl)
+  request("gallery", { limit: 3 })
+    .then((value) => paintAchievements(value.items))
+    .catch(() => {});
+
 const menu = document.querySelector(".landing-menu");
 const nav = document.querySelector("#landing-nav");
 const header = document.querySelector("#site-header");
