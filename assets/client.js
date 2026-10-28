@@ -147,7 +147,10 @@
       title: "Kepengurusan",
       pages: ["Kepengurusan", "Program Kerja", "Pembinaan"],
     },
-    { title: "Kegiatan & Capaian", pages: ["Kalender", "Acara OSDA", "Galeri Capaian"] },
+    {
+      title: "Kegiatan & Capaian",
+      pages: ["Kalender", "Acara OSDA", "Galeri Capaian"],
+    },
     {
       title: "Evaluasi & Dokumen",
       pages: [
@@ -161,7 +164,13 @@
     },
     {
       title: "Pengelolaan",
-      pages: ["Impor Data", "Kelola Data", "Akun & Akses", "Cadangan", "Pengaturan"],
+      pages: [
+        "Impor Data",
+        "Kelola Data",
+        "Akun & Akses",
+        "Cadangan",
+        "Pengaturan",
+      ],
     },
   ];
   const pages = navigationGroups.flatMap((group) => group.pages);
@@ -258,6 +267,7 @@
     "requirements-seed": "seedEventRequirements",
     "archive-trash": "setArchiveTrash",
     "archive-restore": "setArchiveTrash",
+    "archive-trash-view": "setArchiveTrash",
     export: "exportData",
     account: "saveAccount",
     grant: "saveGrant",
@@ -285,25 +295,49 @@
       }[page] ?? 0
     );
   }
+  function periodGrants_() {
+    return (state.data?.access.grants || []).filter(
+      (g) => g.term_id === state.query.term_id,
+    );
+  }
+  function hasPeriodRole_(roles) {
+    return periodGrants_().some((g) => roles.includes(g.role));
+  }
+  function hasPersonalAssignment_() {
+    const id = state.data?.current_user?.id || authLive.user?.id;
+    return Boolean(
+      id &&
+        ["tasks", "issues", "carried_tasks", "requirements"].some((key) =>
+          state.data[key]?.some((r) => r.owner_account_id === id),
+        ),
+    );
+  }
+  function visibleDepartments_() {
+    const all = state.data?.departments || [],
+      grants = periodGrants_();
+    return state.data?.access.is_admin || grants.some((g) => !g.department)
+      ? all
+      : all.filter((name) => grants.some((g) => g.department === name));
+  }
   function pageVisible_(page) {
-    if (!state.data) return false;
+    if (!state.data || !pages.includes(page)) return false;
     if (
       ["Panduan", "Notifikasi", "Persuratan", "Buku Pedoman"].includes(page) &&
       OSDA_BOOT.office_ready === false
     )
       return false;
-    if (page === "Persuratan")
-      return (
-        state.data.access.is_admin ||
-        state.data.access.grants.some(
-          (g) =>
-            g.term_id === state.query.term_id &&
-            ["Ketua OSDA", "Sekretaris"].includes(g.role),
-        )
-      );
-
-    if (["Pengaturan", "Kelola Data", "Akun & Akses", "Cadangan"].includes(page))
+    if (
+      ["Pengaturan", "Kelola Data", "Akun & Akses", "Cadangan"].includes(page)
+    )
       return state.data.access.is_admin;
+    if (state.data.access.is_admin) return true;
+    const coordinators = ["Ketua OSDA", "Sekretaris"];
+    const organizers = [...coordinators, "Ketua Bidang", "Kepala Bidang"];
+    if (["Persuratan", "Galeri Capaian"].includes(page))
+      return hasPeriodRole_(coordinators);
+    if (page === "Serah Terima") return hasPeriodRole_(organizers);
+    if (page === "Tugas Saya")
+      return hasPeriodRole_(organizers) || hasPersonalAssignment_();
     if (page === "Impor Data")
       return (
         state.data.access.is_admin ||
@@ -539,6 +573,7 @@
     return null;
   }
   const button = (label, action, id, kind = "secondary small") => {
+    if (action === "page" && !pageVisible_(id)) return "";
     if (
       action === "issue-program" &&
       isScopeFinal(actionRecord(action, id)?.scope)
@@ -784,6 +819,7 @@
   }
   function render() {
     if (!state.data) return;
+    if (!pageVisible_(state.page)) state.page = "Ringkasan";
     document.body.classList.toggle(
       "view-report",
       state.page === "Laporan Bulanan",
@@ -828,7 +864,8 @@
         "Akun pribadi, penugasan yang jelas, dan pergantian pengurus yang tertata.",
       Pembinaan: "Arahan pendamping untuk memperbaiki pelaksanaan program.",
       "Galeri Capaian": "Dokumentasi terpilih, jejak karya setiap kabinet.",
-      "Kelola Data": "Rapikan data uji, periksa keterkaitan, dan pulihkan bila diperlukan.",
+      "Kelola Data":
+        "Rapikan data uji, periksa keterkaitan, dan pulihkan bila diperlukan.",
     }[state.page];
     $("#today-label").textContent = new Intl.DateTimeFormat("id-ID", {
       weekday: "long",
@@ -837,7 +874,9 @@
       timeZone: "Asia/Jakarta",
     }).format(new Date());
     renderNavigation_();
+    updateWorkspaceFilters_();
     $("#version-label").textContent = "OSDA RQ · v" + OSDA_BOOT.version;
+    $("#version-label").hidden = !state.data.access.is_admin;
     $("#print-context").textContent =
       "OSDA RQ ke-" +
       currentPeriod().name +
@@ -876,6 +915,31 @@
     interiorAfterRender_();
     tick();
   }
+  function updateWorkspaceFilters_() {
+    const noMonth = [
+      "Kepengurusan",
+      "Acara OSDA",
+      "Galeri Capaian",
+      "Arsip & Surat",
+      "Buku Pedoman",
+      "Serah Terima",
+      "Impor Data",
+      "Kelola Data",
+      "Akun & Akses",
+      "Cadangan",
+      "Pengaturan",
+    ];
+    const noScope = [
+      "Galeri Capaian",
+      "Kelola Data",
+      "Akun & Akses",
+      "Cadangan",
+      "Pengaturan",
+    ];
+    $("#month-filter").closest("label").hidden = noMonth.includes(state.page);
+    $("#scope-filter").closest("label").hidden = noScope.includes(state.page);
+    $("#term-filter").closest("label").hidden = state.page === "Cadangan";
+  }
   function dashboard() {
     const d = state.data,
       work = d.programs.filter((p) => p.active),
@@ -900,7 +964,7 @@
             !["Dibatalkan", "Ditunda", "Selesai"].includes(e.status),
         )
         .sort((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
-    const departmentRows = d.departments
+    const departmentRows = visibleDepartments_()
       .map((name, i) => {
         const list = work.filter((p) => p.department === name),
           done = list.filter((p) => p.report).length;
@@ -914,22 +978,32 @@
       [
         "clipboard",
         "Program Kerja",
-        "Isi rekap program",
-        "Catat pelaksanaan bidang",
+        canUI("saveReport") ? "Isi rekap program" : "Tinjau program kerja",
+        canUI("saveReport")
+          ? "Catat pelaksanaan bidang"
+          : "Baca pelaksanaan dan capaian bidang",
         "blue",
       ],
       [
         "chat",
-        "Evaluasi Bulanan",
-        "Siapkan evaluasi",
-        "Bahas dan tuntaskan kendala",
+        canUI("saveMentorNote") && !canUI("saveReport")
+          ? "Pembinaan"
+          : "Evaluasi Bulanan",
+        canUI("saveMentorNote") && !canUI("saveReport")
+          ? "Berikan arahan"
+          : "Lihat evaluasi",
+        canUI("saveMentorNote") && !canUI("saveReport")
+          ? "Catat pembinaan untuk bidang Anda"
+          : "Pantau pembahasan dan tindak lanjut",
         "teal",
       ],
       [
         "folder",
         "Arsip & Surat",
-        "Rapikan arsip",
-        "Simpan jejak organisasi",
+        canUI("saveArchive") ? "Rapikan arsip" : "Baca arsip",
+        canUI("saveArchive")
+          ? "Simpan jejak organisasi"
+          : "Temukan dokumen dalam akses Anda",
         "amber",
       ],
       [
@@ -977,7 +1051,15 @@
         )
         .join(
           "",
-        )}</div><div class="section-heading"><div><span class="eyebrow">LANGKAH BERIKUTNYA</span><h2>Akses cepat</h2></div><span class="section-note">Ruang kerja yang sering digunakan</span></div><div class="quick-grid">${shortcuts.map(([shape, page, title, subtitle, tone]) => `<button type="button" class="quick-action tone-${tone}" data-action="page" data-id="${esc(page)}"><span class="quick-icon">${symbol(shape)}</span><span><strong>${esc(title)}</strong><small>${esc(subtitle)}</small></span><i>${symbol("arrow")}</i></button>`).join("")}</div><section class="panel focus-panel"><div class="panel-head"><div><span class="eyebrow">PEMANTAUAN BULAN INI</span><h2>Yang perlu mendapat perhatian</h2><p>Capaian program dan kelengkapan laporan sebagai bahan rapat bersama.</p></div>${button("Buka evaluasi", "page", "Evaluasi Bulanan")}</div>${review.length + missing.length ? table(["Program", "Jenis / Jadwal", "Bidang penanggung jawab", "Pelaksanaan", "Catatan", "Tindakan"], programRows(review.concat(missing))) : empty("Pemantauan siap dilanjutkan", work.length ? "Lihat rincian rekap dan keputusan pada laporan bulanan." : "Susun program setiap bidang untuk memulai pemantauan.")}<div class="inline-note">${symbol("check")}<span>Rekap yang belum masuk perlu dikonfirmasi. Program tahunan di luar jadwal tidak dianggap gagal.</span></div></section><div class="insight-grid"><section class="panel department-panel"><div class="panel-head"><div><span class="eyebrow">TUJUH BIDANG, SATU TUJUAN</span><h2>Ritme setiap bidang</h2></div><span class="panel-symbol">${symbol("layers")}</span></div><p class="muted">Jumlah rekap dibanding program aktif pada bulan ini.</p>${departmentRows}</section><div class="insight-stack"><section class="continuity-card"><span class="eyebrow">JEJAK KEPEMIMPINAN</span><h3>Amanah berlanjut,<br>cerita tetap tersimpan.</h3><p>Temukan nama pengurus, formatur, dan mentor dari setiap periode OSDA RQ.</p>${button("Lihat kepengurusan", "page", "Kepengurusan")}<div class="period-strip">${d.periods.map((p) => button("Ke-" + p.name, "period", p.id)).join("")}</div></section></div></div>`;
+        )}</div><div class="section-heading"><div><span class="eyebrow">LANGKAH BERIKUTNYA</span><h2>Akses cepat</h2></div><span class="section-note">Ruang kerja yang sering digunakan</span></div><div class="quick-grid">${shortcuts
+        .filter(([, page]) => pageVisible_(page))
+        .map(
+          ([shape, page, title, subtitle, tone]) =>
+            `<button type="button" class="quick-action tone-${tone}" data-action="page" data-id="${esc(page)}"><span class="quick-icon">${symbol(shape)}</span><span><strong>${esc(title)}</strong><small>${esc(subtitle)}</small></span><i>${symbol("arrow")}</i></button>`,
+        )
+        .join(
+          "",
+        )}</div><section class="panel focus-panel"><div class="panel-head"><div><span class="eyebrow">PEMANTAUAN BULAN INI</span><h2>Yang perlu mendapat perhatian</h2><p>Capaian program dan kelengkapan laporan sebagai bahan rapat bersama.</p></div>${button("Buka evaluasi", "page", "Evaluasi Bulanan")}</div>${review.length + missing.length ? table(["Program", "Jenis / Jadwal", "Bidang penanggung jawab", "Pelaksanaan", "Catatan", "Tindakan"], programRows(review.concat(missing))) : empty("Pemantauan siap dilanjutkan", work.length ? "Lihat rincian rekap dan keputusan pada laporan bulanan." : "Susun program setiap bidang untuk memulai pemantauan.")}<div class="inline-note">${symbol("check")}<span>Rekap yang belum masuk perlu dikonfirmasi. Program tahunan di luar jadwal tidak dianggap gagal.</span></div></section><div class="insight-grid"><section class="panel department-panel"><div class="panel-head"><div><span class="eyebrow">${visibleDepartments_().length === d.departments.length ? "LINTAS BIDANG, SATU TUJUAN" : "BIDANG DALAM PENUGASAN ANDA"}</span><h2>Ritme setiap bidang</h2></div><span class="panel-symbol">${symbol("layers")}</span></div><p class="muted">Jumlah rekap dibanding program aktif pada bulan ini.</p>${departmentRows}</section><div class="insight-stack"><section class="continuity-card"><span class="eyebrow">JEJAK KEPEMIMPINAN</span><h3>Amanah berlanjut,<br>cerita tetap tersimpan.</h3><p>Temukan nama pengurus, formatur, dan mentor dari setiap periode OSDA RQ.</p>${button("Lihat kepengurusan", "page", "Kepengurusan")}<div class="period-strip">${d.periods.map((p) => button("Ke-" + p.name, "period", p.id)).join("")}</div></section></div></div>`;
     mountDashboardServices_();
   }
   function programs() {
@@ -1273,7 +1355,7 @@
         (x) => x.month === state.query.month || x.status !== "Selesai",
       );
     $("#page").innerHTML =
-      `${evaluationWorkflow()}<div class="toolbar"><p>Evaluasi seluruh anggota OSDA, lintas bidang. Tindak lanjut terbuka dari bulan sebelumnya tetap ditampilkan.</p><div class="toolbar-actions">${button("Cetak evaluasi", "print")}${button("+ Rapat bulanan", "meeting")}${button("+ Catatan evaluasi", "issue", "", "")}</div></div>${agendaPanel()}${meetings.length ? meetings.map((m) => `<section class="panel"><div class="panel-head"><div><span class="eyebrow">RAPAT · ${esc(m.scope)}</span><h3>${esc(m.name)}</h3><p>${esc(date(m.date))}</p></div>${button("Ubah rapat / notulen", "meeting", m.id)}</div><p><strong>Peserta:</strong> ${esc(m.participants)}</p><p class="prewrap muted">${esc(m.notes || "Notulen belum diisi.")}</p></section>`).join("") : empty("Rapat bulan ini belum dicatat", "Buat rapat untuk menghubungkan masalah, tanggapan, dan keputusan bersama.")}<div class="panel-head"><h2>Masalah & tindak lanjut</h2>${button("Lihat rekap program", "page", "Program Kerja")}</div>${issues.length ? issues.map((x) => `<article class="panel issue"><div class="panel-head"><span class="eyebrow">${esc(x.month)} · ${esc(x.scope)}${x.month !== state.query.month ? " · LANJUTAN BULAN SEBELUMNYA" : ""}</span>${badge(x.status)}</div><div class="route">${esc(x.from_department)} → ${esc(x.to_department)}</div><h3>${esc(x.problem)}</h3><dl><div><dt>TANGGAPAN</dt><dd>${esc(x.response || "Menunggu tanggapan.")}</dd></div><div><dt>KEPUTUSAN BERSAMA</dt><dd>${esc(x.decision || "Belum ditetapkan.")}</dd></div>${x.resolution ? `<div><dt>HASIL TINDAK LANJUT</dt><dd>${esc(x.resolution)}</dd></div>` : ""}</dl><div class="issue-footer"><span>${esc(x.owner)} · Tenggat ${esc(date(x.due))}</span>${button("Perbarui tindak lanjut", "issue", x.id)}</div></article>`).join("") : empty("Belum ada catatan evaluasi", "Gunakan rekap program sebagai bahan pembahasan rapat bulanan.")}`;
+      `${evaluationWorkflow()}<div class="toolbar"><p>Evaluasi seluruh anggota OSDA, lintas bidang. Tindak lanjut terbuka dari bulan sebelumnya tetap ditampilkan.</p><div class="toolbar-actions">${button("Cetak evaluasi", "print")}${button("+ Rapat bulanan", "meeting")}${button("+ Catatan evaluasi", "issue", "", "")}</div></div>${agendaPanel()}${meetings.length ? meetings.map((m) => `<section class="panel"><div class="panel-head"><div><span class="eyebrow">RAPAT · ${esc(m.scope)}</span><h3>${esc(m.name)}</h3><p>${esc(date(m.date))}</p></div>${button("Ubah rapat / notulen", "meeting", m.id)}</div><p><strong>Peserta:</strong> ${esc(m.participants)}</p><p class="prewrap muted">${esc(m.notes || "Notulen belum diisi.")}</p></section>`).join("") : empty("Rapat bulan ini belum dicatat", canUI("saveMeeting") ? "Buat rapat untuk menghubungkan masalah, tanggapan, dan keputusan bersama." : "Catatan rapat akan tampil setelah dicatat pengurus yang berwenang.")}<div class="panel-head"><h2>Masalah & tindak lanjut</h2>${button("Lihat rekap program", "page", "Program Kerja")}</div>${issues.length ? issues.map((x) => `<article class="panel issue"><div class="panel-head"><span class="eyebrow">${esc(x.month)} · ${esc(x.scope)}${x.month !== state.query.month ? " · LANJUTAN BULAN SEBELUMNYA" : ""}</span>${badge(x.status)}</div><div class="route">${esc(x.from_department)} → ${esc(x.to_department)}</div><h3>${esc(x.problem)}</h3><dl><div><dt>TANGGAPAN</dt><dd>${esc(x.response || "Menunggu tanggapan.")}</dd></div><div><dt>KEPUTUSAN BERSAMA</dt><dd>${esc(x.decision || "Belum ditetapkan.")}</dd></div>${x.resolution ? `<div><dt>HASIL TINDAK LANJUT</dt><dd>${esc(x.resolution)}</dd></div>` : ""}</dl><div class="issue-footer"><span>${esc(x.owner)} · Tenggat ${esc(date(x.due))}</span>${button("Perbarui tindak lanjut", "issue", x.id)}</div></article>`).join("") : empty("Belum ada catatan evaluasi", "Gunakan rekap program sebagai bahan pembahasan rapat bulanan.")}`;
   }
   function events() {
     const d = state.data,
@@ -1286,7 +1368,7 @@
       return;
     }
     $("#page").innerHTML =
-      `<div class="toolbar"><p>Satu acara bersama Santriwan dan Santriwati, dengan jadwal, kepanitiaan, tugas, dan arsip yang terhubung.</p><div class="toolbar-actions">${button("+ Acara OSDA", "event", "", "")}</div></div>${d.events.length ? `<div class="event-grid">${d.events.map((x) => `<article class="event-card"><span class="eyebrow">${esc(x.program_type)} · ${esc(x.scope === "Bersama" ? "Santriwan & Santriwati" : x.scope + " · Riwayat")}</span>${badge(x.status)}<h3>${esc(x.name)}</h3><p>${esc(date(x.starts_at, true))}<br>${esc(x.location || "Tempat belum diisi")}</p>${button("Kelola acara →", "event-open", x.id)}</article>`).join("")}</div>` : empty("Belum ada acara pada periode ini", "Tambahkan Expose, Drakasa, Pensi, Nobadar, Muhadharah Akbar, atau program baru.")}`;
+      `<div class="toolbar"><p>Satu acara bersama Santriwan dan Santriwati, dengan jadwal, kepanitiaan, tugas, dan arsip yang terhubung.</p><div class="toolbar-actions">${button("+ Acara OSDA", "event", "", "")}</div></div>${d.events.length ? `<div class="event-grid">${d.events.map((x) => `<article class="event-card"><span class="eyebrow">${esc(x.program_type)} · ${esc(x.scope === "Bersama" ? "Santriwan & Santriwati" : x.scope + " · Riwayat")}</span>${badge(x.status)}<h3>${esc(x.name)}</h3><p>${esc(date(x.starts_at, true))}<br>${esc(x.location || "Tempat belum diisi")}</p>${button(canUI("saveEvent", x) ? "Kelola acara →" : "Lihat acara →", "event-open", x.id)}</article>`).join("")}</div>` : empty("Belum ada acara pada periode ini", "Tambahkan Expose, Drakasa, Pensi, Nobadar, Muhadharah Akbar, atau program baru.")}`;
   }
   async function loadDossier(eventId) {
     if ($("#event-dossier"))
@@ -1472,7 +1554,7 @@
             ["Pengguna", "Username", "Status", "Tindakan"],
             data.accounts.map(
               (a) =>
-                `<tr><td><strong>${esc(a.name)}</strong></td><td>${esc(a.username)}</td><td>${badge(a.active ? "Aktif" : "Nonaktif")}<small>${a.must_change_password ? "Wajib ganti sandi sementara" : ""}</small></td><td><div class="actions">${button("Ubah akun", "account", a.id)}${button("Reset kata sandi", "resetpassword", a.id)}${!a.active?manageButton_("Hapus akun","account-delete",a.id,true):""}</div></td></tr>`,
+                `<tr><td><strong>${esc(a.name)}</strong></td><td>${esc(a.username)}</td><td>${badge(a.active ? "Aktif" : "Nonaktif")}<small>${a.must_change_password ? "Wajib ganti sandi sementara" : ""}</small></td><td><div class="actions">${button("Ubah akun", "account", a.id)}${button("Reset kata sandi", "resetpassword", a.id)}${!a.active ? manageButton_("Hapus akun", "account-delete", a.id, true) : ""}</div></td></tr>`,
             ),
           )}
           <div class="section-heading"><div><span class="eyebrow">PERAN · RAYON · BIDANG · PERIODE</span><h2>Penugasan akses</h2></div></div>
@@ -2846,7 +2928,199 @@ const authLive = {
     forced: false,
     busy: false,
     ready: false,
+    identityTrigger: null,
   };
+  function accountIdentity_() {
+    const user = state.data?.current_user || authLive.user || {};
+    const grants = state.data?.access.grants || [];
+    const global = grants.filter(
+      (g) => !g.term_id && ["Admin", "Mentor OSDA"].includes(g.role),
+    );
+    const current = periodGrants_();
+    const order = [
+      "Mentor OSDA",
+      "Admin",
+      "Ketua OSDA",
+      "Sekretaris",
+      "Ketua Bidang",
+      "Kepala Bidang",
+      "Mentor Bidang",
+    ];
+    const roles = [...new Set([...global, ...current].map((g) => g.role))].sort(
+      (a, b) => order.indexOf(a) - order.indexOf(b),
+    );
+    const displayRole = (role) =>
+      role === "Admin"
+        ? "Admin OSDA"
+        : role === "Kepala Bidang"
+          ? "Ketua Bidang"
+          : role;
+    const departments = [
+      ...new Set(current.map((g) => g.department).filter(Boolean)),
+    ];
+    const all = state.data?.access.is_admin;
+    const scopes = [...new Set(current.map((g) => g.scope))];
+    return {
+      user,
+      grants,
+      current,
+      name: user.name || "Akun pengurus",
+      role: roles.length
+        ? [...new Set(roles.map(displayRole))].join(" · ")
+        : all
+          ? "Admin OSDA"
+          : "Pengurus OSDA",
+      department:
+        all || current.some((g) => !g.department)
+          ? "Seluruh bidang"
+          : departments.join(" · ") || "Belum ditetapkan",
+      scope:
+        all || scopes.includes("Semua")
+          ? "Santriwan & Santriwati"
+          : scopes.join(" · ") || "Belum ditetapkan",
+      readOnly: !all && current.length > 0 && current.every((g) => g.read_only),
+      displayRole,
+    };
+  }
+  function renderAccountIdentity_() {
+    if (!state.data || !authLive.token) return;
+    const identity = accountIdentity_(),
+      period = currentPeriod();
+    const shortRole =
+      identity.role +
+      (identity.current.length &&
+      !identity.current.some((g) => !g.department) &&
+      !state.data.access.is_admin
+        ? " · " + identity.department
+        : "") +
+      (identity.readOnly ? " · Baca saja" : "");
+    $("#user-label").textContent = identity.name;
+    $("#user-role").textContent = shortRole;
+    document
+      .querySelectorAll("[data-account-initials]")
+      .forEach((node) => (node.textContent = initials(identity.name) || "RQ"));
+    document
+      .querySelectorAll("[data-account-name]")
+      .forEach((node) => (node.textContent = identity.name));
+    document
+      .querySelectorAll("[data-account-role]")
+      .forEach((node) => (node.textContent = shortRole));
+    document.querySelectorAll("[data-account-open]").forEach((node) => {
+      node.title = identity.name + " · " + shortRole;
+      node.setAttribute(
+        "aria-label",
+        "Buka identitas " + identity.name + ", " + shortRole,
+      );
+    });
+    $("#account-avatar").textContent = initials(identity.name) || "RQ";
+    $("#account-title").textContent = identity.name;
+    $("#account-primary-role").textContent = identity.role;
+    $("#account-username").textContent = identity.user.username
+      ? "@" + identity.user.username
+      : "Akun pengurus";
+    const facts = [
+      ["Rayon", identity.scope],
+      ["Bidang", identity.department],
+      ["Kabinet", period.cabinet_name || "Belum ditetapkan"],
+      [
+        "Periode yang dibuka",
+        "Ke-" +
+          (period.name || "—") +
+          (period.years ? " · " + period.years : ""),
+      ],
+    ];
+    $("#account-facts").innerHTML = facts
+      .map(
+        ([label, value]) =>
+          `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`,
+      )
+      .join("");
+    $("#account-assignment-count").textContent =
+      identity.grants.length + " penugasan";
+    $("#account-grants").innerHTML =
+      identity.grants
+        .map((g) => {
+          const term = state.data.periods.find((p) => p.id === g.term_id);
+          const current = !g.term_id || g.term_id === state.query.term_id;
+          const context = !g.term_id
+            ? "Seluruh periode · Santriwan & Santriwati"
+            : "Periode ke-" +
+              (term?.name || "—") +
+              " · " +
+              (g.scope === "Semua" ? "Santriwan & Santriwati" : g.scope) +
+              (g.department ? " · " + g.department : " · Seluruh bidang");
+          return `<article class="account-assignment ${current ? "is-current" : ""}"><span class="account-assignment-mark" aria-hidden="true">${symbol(g.role.includes("Mentor") || g.role === "Admin" ? "shield" : "people")}</span><div><strong>${esc(identity.displayRole(g.role))}</strong><p>${esc(context)}</p><small>${!g.term_id ? "Akses pengelola" : g.read_only ? "Baca saja" : "Akses sesuai penugasan"}${g.term_id === state.query.term_id ? " · Periode yang dibuka" : ""}</small></div></article>`;
+        })
+        .join("") ||
+      '<p class="account-help">Penugasan akun belum tersedia.</p>';
+    const caption = $(".nav-caption");
+    if (caption)
+      caption.textContent = state.data.access.is_admin
+        ? "PUSAT ADMINISTRASI ORGANISASI"
+        : hasPeriodRole_(["Ketua OSDA"])
+          ? "KOORDINASI KEPENGURUSAN"
+          : hasPeriodRole_(["Sekretaris"])
+            ? "ADMINISTRASI & DOKUMENTASI"
+            : hasPeriodRole_(["Ketua Bidang", "Kepala Bidang"])
+              ? "RUANG KERJA BIDANG"
+              : "RUANG PEMBINAAN";
+  }
+  function closeAccountIdentity_(restoreFocus = true) {
+    const dialog = $("#account-dialog");
+    if (!dialog?.hasAttribute("open")) return;
+    dialog.close();
+    document
+      .querySelectorAll("[data-account-open]")
+      .forEach((node) => node.setAttribute("aria-expanded", "false"));
+    if (restoreFocus && authLive.identityTrigger?.isConnected)
+      authLive.identityTrigger.focus?.();
+    authLive.identityTrigger = null;
+  }
+  function openAccountIdentity_(trigger) {
+    if (!authLive.token || !state.data) return;
+    authLive.identityTrigger =
+      trigger?.closest("#sidebar") && (window.innerWidth || 1024) <= 760
+        ? $(".account-trigger")
+        : trigger;
+    setMobileSidebar_(false);
+    renderAccountIdentity_();
+    $("#account-dialog").showModal();
+    document
+      .querySelectorAll("[data-account-open]")
+      .forEach((node) => node.setAttribute("aria-expanded", "true"));
+    $("[data-account-close]").focus?.();
+  }
+  function resetAccountIdentity_() {
+    closeAccountIdentity_(false);
+    authLive.identityTrigger = null;
+    for (const id of [
+      "account-title",
+      "account-primary-role",
+      "account-username",
+      "account-facts",
+      "account-grants",
+      "account-assignment-count",
+    ])
+      $("#" + id).replaceChildren();
+    $("#account-avatar").textContent = "RQ";
+    $("#user-label").textContent = "Akun pengurus";
+    $("#user-role").textContent = "Identitas akun saya";
+    document
+      .querySelectorAll("[data-account-initials]")
+      .forEach((node) => (node.textContent = "RQ"));
+    document
+      .querySelectorAll("[data-account-name]")
+      .forEach((node) => (node.textContent = "Akun pengurus"));
+    document
+      .querySelectorAll("[data-account-role]")
+      .forEach((node) => (node.textContent = "Identitas akun saya"));
+    document.querySelectorAll("[data-account-open]").forEach((node) => {
+      node.title = "Identitas akun saya";
+      node.setAttribute("aria-label", "Buka identitas akun");
+      node.setAttribute("aria-expanded", "false");
+    });
+    $("#navigation").replaceChildren();
+  }
   function authRequest(payload) {
     return new Promise((resolve, reject) =>
       google.script.run
@@ -2881,6 +3155,7 @@ const authLive = {
     document.querySelector("#login-error").textContent = "";
   }
   function showLogin(message) {
+    resetAccountIdentity_();
     resetLoading_();
     setMobileSidebar_(false);
     hideNavTooltip_();
@@ -2933,6 +3208,7 @@ const authLive = {
     await load();
   }
   function openPassword(forced) {
+    closeAccountIdentity_(false);
     authLive.forced = Boolean(forced);
     document.querySelector("#password-form").reset();
     document.querySelector("#password-error").textContent = "";
@@ -2987,6 +3263,17 @@ const authLive = {
     .querySelector("#login-back")
     .addEventListener("click", () => loginMode("login"));
   document.querySelector("#logout-button").addEventListener("click", logout);
+  document.addEventListener("click", (event) => {
+    const open = event.target.closest?.("[data-account-open]");
+    if (open) openAccountIdentity_(open);
+    if (event.target.closest?.("[data-account-close]")) closeAccountIdentity_();
+  });
+  document.querySelector("#account-dialog").addEventListener("close", () => {
+    document
+      .querySelectorAll("[data-account-open]")
+      .forEach((node) => node.setAttribute("aria-expanded", "false"));
+    authLive.identityTrigger = null;
+  });
   document
     .querySelector("#password-open")
     .addEventListener("click", () => openPassword(false));
@@ -3105,7 +3392,11 @@ const workUI = {
     programFrequency: "",
   };
   const workButton = (label, action, id = "", extra = "") =>
-    `<button type="button" class="button secondary small" data-workspace="${action}" data-id="${esc(id)}" ${extra}>${esc(label)}</button>`;
+    ["my-task-done", "my-followup", "my-carried-task"].includes(action) &&
+    !state.data?.access.is_admin &&
+    !periodGrants_().some((g) => !g.read_only)
+      ? ""
+      : `<button type="button" class="button secondary small" data-workspace="${action}" data-id="${esc(id)}" ${extra}>${esc(label)}</button>`;
   function resetWorkspace_() {
     workUI.request++;
     workUI.receiverRequest++;
@@ -3174,6 +3465,18 @@ const workUI = {
       const labels = [...w.querySelectorAll("thead th")].map(
         (th) => th.textContent,
       );
+      const head = w.querySelector("thead th:last-child");
+      const actionCells = [...w.querySelectorAll("tbody tr")].map(
+        (row) => row.lastElementChild,
+      );
+      const emptyActions =
+        head?.textContent.trim() === "Tindakan" &&
+        actionCells.length > 0 &&
+        actionCells.every((cell) => !cell?.textContent.trim());
+      if (head?.textContent.trim() === "Tindakan") {
+        head.hidden = emptyActions;
+        actionCells.forEach((cell) => (cell.hidden = emptyActions));
+      }
       w.querySelectorAll("tbody tr").forEach((row) =>
         [...row.children].forEach((td, i) =>
           td.setAttribute("data-label", labels[i] || ""),
@@ -3243,11 +3546,11 @@ const workUI = {
       const tasks = data.tasks.filter((t) => !t.done);
       $("#page").innerHTML =
         `<section class="personal-intro"><div><span class="eyebrow">AMANAH YANG ANDA PEGANG</span><h2>Selamat bekerja, ${esc(data.account.name)}.</h2><p>Periode ke-${esc(currentPeriod().name)} · ${esc(monthName(state.query.month))}</p></div><div class="personal-total"><strong>${tasks.length + data.issues.length + data.reports.length + (data.carried_tasks || []).length}</strong><span>pekerjaan terbuka</span></div></section>
-        <div class="work-grid"><section class="panel"><div class="panel-head"><h2>Tugas acara</h2>${badge(tasks.length + " terbuka")}</div>${tasks.length ? tasks.map((t) => `<article class="work-item"><strong>${esc(t.name)}</strong><p>${esc(state.data.events.find((e) => e.id === t.event_id)?.name || "Acara OSDA")}</p>${dueLabel(t)}<div class="actions">${workButton("Tandai selesai", "my-task-done", t.id)}${button("Buka acara", "event-open", t.event_id)}</div></article>`).join("") : empty("Tugas acara tertata", "Belum ada tugas acara terbuka yang dihubungkan ke akun Anda.")}</section>
-        <section class="panel"><div class="panel-head"><h2>Laporan bidang yang perlu diisi</h2>${badge(data.reports.length + " program")}</div>${data.reports.length ? data.reports.map((p) => `<article class="work-item"><strong>${esc(p.name)}</strong><p>Bidang ${esc(p.department)} · ${esc(p.scope)}</p><span class="due-label">Penanggung jawab: bidang</span><div class="actions">${p.locked ? badge("Bulan sudah Final") : button("Isi rekap", "report", p.id)}</div></article>`).join("") : empty("Rekap pribadi tertata", "Laporan bidang untuk bulan ini sudah tertata.")}</section></div>
+        <div class="work-grid ${canUI("saveReport") || data.reports.length ? "" : "work-grid-single"}"><section class="panel"><div class="panel-head"><h2>Tugas acara</h2>${badge(tasks.length + " terbuka")}</div>${tasks.length ? tasks.map((t) => `<article class="work-item"><strong>${esc(t.name)}</strong><p>${esc(state.data.events.find((e) => e.id === t.event_id)?.name || "Acara OSDA")}</p>${dueLabel(t)}<div class="actions">${workButton("Tandai selesai", "my-task-done", t.id)}${button("Buka acara", "event-open", t.event_id)}</div></article>`).join("") : empty("Tugas acara tertata", "Belum ada tugas acara terbuka yang dihubungkan ke akun Anda.")}</section>
+        ${canUI("saveReport") || data.reports.length ? `<section class="panel"><div class="panel-head"><h2>Laporan bidang yang perlu diisi</h2>${badge(data.reports.length + " program")}</div>${data.reports.length ? data.reports.map((p) => `<article class="work-item"><strong>${esc(p.name)}</strong><p>Bidang ${esc(p.department)} · ${esc(p.scope)}</p><span class="due-label">Penanggung jawab: bidang</span><div class="actions">${p.locked ? badge("Bulan sudah Final") : button("Isi rekap", "report", p.id)}</div></article>`).join("") : empty("Rekap bidang tertata", "Laporan bidang untuk bulan ini sudah tertata.")}</section>` : ""}</div>
         ${(data.carried_tasks || []).length ? `<section class="panel"><div class="panel-head"><h2>Tugas lanjutan serah terima</h2>${badge(data.carried_tasks.length + " terbuka")}</div>${data.carried_tasks.map((t) => `<article class="work-item"><div class="panel-head"><strong>${esc(t.name)}</strong>${badge(t.status)}</div><p>${esc(t.detail || "Pekerjaan dari periode sebelumnya.")}</p>${dueLabel(t)}<div class="actions">${workButton("Perbarui hasil", "my-carried-task", t.id)}</div></article>`).join("")}</section>` : ""}
         <section class="panel"><div class="panel-head"><h2>Tindak lanjut keputusan</h2>${badge(data.issues.length + " terbuka")}</div>${data.issues.length ? data.issues.map((i) => `<article class="work-item"><div class="panel-head"><strong>${esc(i.problem)}</strong>${badge(i.status)}</div><p>${esc(i.decision || "Keputusan belum diisi.")}</p>${dueLabel(i)}<div class="actions">${workButton("Perbarui hasil", "my-followup", i.id)}</div></article>`).join("") : empty("Belum ada tindak lanjut pribadi", "Keputusan yang ditugaskan kepada akun Anda akan muncul di sini.")}</section>
-        <section class="panel"><div class="panel-head"><h2>Arahan mentor</h2>${button("Buka pembinaan", "page", "Pembinaan")}</div>${data.mentor_notes.length ? data.mentor_notes.map((n) => `<article class="mentor-note"><strong>${esc(state.data.programs.find((p) => p.id === n.program_id)?.name || "Program")}</strong><p class="prewrap">${esc(n.note)}</p><small>${esc(n.author_name)} · ${esc(monthName(n.month))}</small></article>`).join("") : empty("Arahan akan tersimpan di sini", "Catatan mentor untuk program yang ditugaskan ke akun Anda akan tampil di ruang ini.")}</section>
+        <section class="panel"><div class="panel-head"><h2>Arahan mentor</h2>${button("Buka pembinaan", "page", "Pembinaan")}</div>${data.mentor_notes.length ? data.mentor_notes.map((n) => `<article class="mentor-note"><strong>${esc(state.data.programs.find((p) => p.id === n.program_id)?.name || "Program")}</strong><p class="prewrap">${esc(n.note)}</p><small>${esc(n.author_name)} · ${esc(monthName(n.month))}</small></article>`).join("") : empty("Arahan akan tersimpan di sini", "Catatan mentor untuk program dalam penugasan bidang Anda akan tampil di ruang ini.")}</section>
 `;
     });
   }
@@ -4231,10 +4534,14 @@ const revisionUI = { request: 0, context: null, loadedAt: 0, offset: 0 };
       $(".brand").insertAdjacentElement("afterend", label);
     }
     label.innerHTML = `<span>KABINET · OSDA KE-${esc(period.name)}</span><strong>${esc(name || "Nama kabinet belum ditetapkan")}</strong><small>Satu kabinet · Putra &amp; Putri</small>`;
+    label.title =
+      (name || "Nama kabinet belum ditetapkan") +
+      " · Periode ke-" +
+      period.name;
     if (state.page === "Ringkasan") {
       const copy = $(".overview-copy");
       if (copy)
-        copy.innerHTML = `<span class="eyebrow">SATU KABINET · PUTRA &amp; PUTRI</span><h2 class="cabinet-wordmark">${esc(name || "OSDA RQ ke-" + period.name)}</h2><p>${name ? "Mengemban amanah bersama dalam satu arah kepengurusan." : "Nama kabinet dapat ditetapkan melalui pengaturan periode."}</p><div class="overview-actions">${button("Program kerja", "page", "Program Kerja", "")}${button("Laporan bulanan", "page", "Laporan Bulanan")}${state.data.access.is_admin ? button("Atur kabinet", "period-edit", period.id) : ""}</div>`;
+        copy.innerHTML = `<span class="eyebrow">SATU KABINET · PUTRA &amp; PUTRI</span><h2 class="cabinet-wordmark">${esc(name || "OSDA RQ ke-" + period.name)}</h2><p>${canUI("saveReport") ? "Pantau program dan catat pelaksanaan sesuai amanah Anda." : canUI("saveMentorNote") ? "Tinjau pelaksanaan program dan sampaikan arahan untuk bidang dampingan Anda." : "Baca perkembangan program dan catatan kepengurusan."}</p><div class="overview-actions">${button(canUI("saveReport") ? "Isi rekap program" : "Tinjau program", "page", "Program Kerja", "")}${canUI("saveMentorNote") && !canUI("saveReport") ? button("Tulis arahan", "page", "Pembinaan") : button("Laporan bulanan", "page", "Laporan Bulanan")}${state.data.access.is_admin ? button("Atur kabinet", "period-edit", period.id) : ""}</div>`;
     }
   }
   function weatherSymbol_(code) {
@@ -4263,7 +4570,7 @@ const revisionUI = { request: 0, context: null, loadedAt: 0, offset: 0 };
     const value = (n, unit = "") =>
       n === null || n === undefined ? "—" : Math.round(n) + unit;
     return `<section class="weather-widget"><div class="service-heading"><div><span class="eyebrow">PRAKIRAAN CUACA</span><h2>${esc(data?.location || identity.city || "Meulaboh")}</h2></div><span class="service-orbit" aria-hidden="true">✦</span></div>${weather ? `<div class="weather-current">${weatherSymbol_(weather.code)}<div><strong>${value(weather.temperature, "°")}<small>C</small></strong><p>${esc(weather.label)}</p><span>Kelembapan ${value(weather.humidity, "%")}</span></div></div><div class="weather-days">${weather.days.map((d) => `<div><span>${d.date === data.day ? "Hari ini" : esc(new Intl.DateTimeFormat("id-ID", { weekday: "short", timeZone: "Asia/Jakarta" }).format(new Date(d.date + "T12:00:00Z")))}</span>${weatherSymbol_(d.code)}<strong>${value(d.max, "°")} <small>/ ${value(d.min, "°")}</small></strong><small>Peluang hujan ${value(d.rain, "%")}</small></div>`).join("")}</div><p class="service-source">${weather.stale ? "Data tersimpan · " : "Diperbarui · "}${esc(date(weather.fetched_at, true))} · <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></p>` : `<div class="service-empty">${data ? weatherSymbol_(3) + "<p>Prakiraan cuaca belum tersedia.</p>" : loadingIndicator_("Memuat prakiraan cuaca…")}</div>`}</section>
-      <section class="prayer-widget"><div class="service-heading"><div><span class="eyebrow">JAGA WAKTU, JAGA AMANAH</span><h2>Waktu salat</h2><p>${esc(data?.location || identity.city || "Meulaboh")} · WIB</p></div><span class="prayer-moon" aria-hidden="true">☾</span></div>${prayer ? `<p class="prayer-date">${esc(date(prayer.day))}</p><div class="prayer-times">${prayer.prayers.map((p) => `<div class="prayer-time" data-prayer-time="${p.time}" data-prayer-name="${p.name}"><span>${p.name}</span><strong>${p.time}</strong></div>`).join("")}</div><p class="prayer-next" id="prayer-next-label"></p><p class="service-source">Perhitungan metode Kemenag RI · <a href="https://aladhan.com/prayer-times-api" target="_blank" rel="noopener noreferrer">AlAdhan</a><br>Sesuaikan titik lokasi dengan dayah pada Pengaturan.</p>` : `<div class="service-empty">${data ? "<p>Jadwal salat hari ini belum tersedia.</p>" : loadingIndicator_("Memuat waktu salat…")}</div>`}</section>
+      <section class="prayer-widget"><div class="service-heading"><div><span class="eyebrow">JAGA WAKTU, JAGA AMANAH</span><h2>Waktu salat</h2><p>${esc(data?.location || identity.city || "Meulaboh")} · WIB</p></div><span class="prayer-moon" aria-hidden="true">☾</span></div>${prayer ? `<p class="prayer-date">${esc(date(prayer.day))}</p><div class="prayer-times">${prayer.prayers.map((p) => `<div class="prayer-time" data-prayer-time="${p.time}" data-prayer-name="${p.name}"><span>${p.name}</span><strong>${p.time}</strong></div>`).join("")}</div><p class="prayer-next" id="prayer-next-label"></p><p class="service-source">Perhitungan metode Kemenag RI · <a href="https://aladhan.com/prayer-times-api" target="_blank" rel="noopener noreferrer">AlAdhan</a>${state.data.access.is_admin ? "<br>Sesuaikan titik lokasi dengan dayah pada Pengaturan." : ""}</p>` : `<div class="service-empty">${data ? "<p>Jadwal salat hari ini belum tersedia.</p>" : loadingIndicator_("Memuat waktu salat…")}</div>`}</section>
       ${eventCountdownHTML_(event)}`;
   }
   function eventCountdownHTML_(event) {
@@ -5504,6 +5811,7 @@ const OSDA_MEDIA = {
     );
   }
   function interiorAfterRender_() {
+    renderAccountIdentity_();
     mountWorkspaceHero_();
     const workspace = $("#workspace");
     workspace.style.setProperty(
@@ -5514,10 +5822,7 @@ const OSDA_MEDIA = {
       "--rq-community-photo",
       `url("${OSDA_MEDIA.kebersamaan}")`,
     );
-    const cabinet = currentPeriod(),
-      note = $(".sidebar-note");
-    if (note)
-      note.innerHTML = `<span class="sidebar-note-mark" aria-hidden="true">✦</span><small>AMANAH KEPENGURUSAN · ${esc(cabinet.name)}</small><p>${esc(cabinet.cabinet_name || "Satu arah pengabdian")}</p><span class="sidebar-cabinet-line">Adab · Amanah · Karya</span>`;
+    const cabinet = currentPeriod();
     if (state.page === "Ringkasan" && !$(".cabinet-welcome")) {
       const welcome = document.createElement("section");
       welcome.className = "cabinet-welcome";
@@ -5942,8 +6247,8 @@ const scopedRender_ = render;
 render = function () {
   scopedRender_();
   const archive = state.page === "Arsip & Surat";
-  $("#scope-filter").closest("label").hidden = archive;
-  $("#month-filter").closest("label").hidden = archive;
+  $("#scope-filter").closest("label").hidden ||= archive;
+  $("#month-filter").closest("label").hidden ||= archive;
   if (archive && !$("#archive-unified-note"))
     $("#page").insertAdjacentHTML(
       "afterbegin",

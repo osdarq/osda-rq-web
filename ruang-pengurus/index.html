@@ -10711,6 +10711,9 @@
   @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap");
   /* One quiet visual language shared by the public site and the working rooms. */
   @media screen {
+    :root {
+      --nav-width: 238px;
+    }
     #workspace {
       font-family: Manrope, system-ui, sans-serif;
       --rq-ink: #103647;
@@ -10723,7 +10726,7 @@
         linear-gradient(135deg, #e8eeea, #dfe9e8);
     }
     #workspace .sidebar {
-      padding: 23px 16px 16px;
+      padding: 14px 11px 10px;
       background:
         radial-gradient(ellipse at 0 0, #24697460, transparent 56%),
         linear-gradient(170deg, #103747, #092432 74%);
@@ -10731,19 +10734,19 @@
       box-shadow: 8px 0 35px #08263312;
     }
     #workspace .sidebar .brand {
-      gap: 12px;
-      padding: 0 5px 19px;
+      gap: 9px;
+      padding: 0 4px 12px;
       border-bottom: 1px solid #c5dcd51a;
     }
     #workspace .sidebar .brand img {
-      width: 45px;
-      height: 45px;
+      width: 38px;
+      height: 38px;
       object-fit: contain;
       filter: drop-shadow(0 3px 10px #0003);
     }
     #workspace .brand-text {
       color: #eef4ef;
-      font-size: 17px;
+      font-size: 15px;
       letter-spacing: 0.4px;
     }
     #workspace .brand-text small {
@@ -10773,21 +10776,23 @@
       font-size: 8px;
       letter-spacing: 1.3px;
       color: #9ebbbd;
-      margin: 21px 13px 12px;
+      margin: 11px 9px 5px;
     }
     #workspace #navigation {
-      gap: 12px;
-      padding: 0 3px 10px;
+      gap: 4px;
+      padding: 0 2px 6px;
+      overscroll-behavior: contain;
       scrollbar-width: thin;
       scrollbar-color: #57848170 transparent;
     }
     #workspace #navigation .nav-group {
       border-top: 1px solid #d3e8dc0c;
-      padding-top: 7px;
+      padding: 3px 0 2px;
     }
     #workspace #navigation .nav-group-toggle {
-      padding: 9px 10px;
-      min-height: 34px;
+      padding: 5px 8px;
+      min-height: 26px;
+      margin: 0 0 2px;
       color: #aec8c4;
       border-radius: 9px;
     }
@@ -10812,12 +10817,12 @@
     }
     #workspace #navigation button[data-action="page"] {
       position: relative;
-      min-height: 42px;
-      margin: 3px 0;
+      min-height: 34px;
+      margin: 1px 0;
       border: 1px solid transparent;
-      border-radius: 11px;
-      padding: 10px 12px;
-      gap: 11px;
+      border-radius: 9px;
+      padding: 4px 9px;
+      gap: 9px;
       color: #c0d3d0;
       font:
         600 11px/1.5 Manrope,
@@ -10831,9 +10836,9 @@
     #workspace #navigation .nav-icon {
       display: grid;
       place-items: center;
-      flex: 0 0 27px;
-      width: 27px;
-      height: 27px;
+      flex: 0 0 24px;
+      width: 24px;
+      height: 24px;
       border: 1px solid #cee8dd16;
       border-radius: 8px;
       background: #d7efdc05;
@@ -10873,60 +10878,64 @@
       background: #32775d;
       margin-left: auto;
     }
-    #workspace .sidebar .sidebar-note {
+    #workspace .sidebar .sidebar-cabinet {
+      position: relative;
       isolation: isolate;
       overflow: hidden;
       flex-shrink: 0;
-      min-height: 135px;
-      margin: 15px 4px 13px;
-      padding: 18px 14px 15px;
-      border: 1px solid #a8c3b73d;
-      border-radius: 14px;
+      margin: 10px 3px 0;
+      padding: 9px 12px;
+      border: 1px solid #b8ccb52e;
+      border-left: 2px solid #d3b67c;
+      border-radius: 4px 11px 11px 4px;
       background:
-        linear-gradient(130deg, #103641f2, #102e35b8),
-        var(--rq-mosque-photo) center 53% / cover;
-      box-shadow: inset 0 1px #d8eadc17;
+        linear-gradient(100deg, #113c48f0, #103747b8),
+        var(--rq-mosque-photo) center 55% / cover;
     }
-    #workspace .sidebar-note::before {
+    #workspace .sidebar-cabinet::after {
       content: "";
       position: absolute;
-      inset: 8px;
-      border: 1px solid #c8b68a30;
-      border-radius: 9px;
+      width: 66px;
+      height: 66px;
+      right: -23px;
+      top: -28px;
+      border: 1px solid #d3b67c35;
+      transform: rotate(45deg);
       pointer-events: none;
       z-index: -1;
     }
-    #workspace .sidebar-note p {
-      font-size: 16px;
-      line-height: 1.5;
-      font-weight: 800;
-      color: #f0e7cf;
-      margin: 8px 0;
-      overflow-wrap: anywhere;
-      max-width: 180px;
-    }
-    #workspace .sidebar-note small {
+    #workspace .sidebar-cabinet > span {
+      display: block;
       font-size: 7px;
-      letter-spacing: 1.2px;
-      color: #bdd4ca;
+      line-height: 1.4;
+      letter-spacing: 1px;
+      color: #d8c18e;
     }
-    #workspace .sidebar-note-mark {
-      right: 15px;
-      top: 30px;
-      color: #e3c38a;
-      font-size: 19px;
+    #workspace .sidebar-cabinet strong {
+      display: block;
+      margin: 3px 0;
+      font:
+        800 12px/1.45 Manrope,
+        sans-serif;
+      color: #f0e8d4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    #workspace .sidebar-cabinet-line {
-      font-size: 9px;
-      letter-spacing: 0.6px;
-      color: #a9ccc2;
+    #workspace .sidebar-cabinet small {
+      display: block;
+      font-size: 8px;
+      line-height: 1.5;
+      color: #adcac1;
     }
     #workspace .sidebar-bottom {
-      padding-top: 13px;
+      padding-top: 8px;
       flex-shrink: 0;
       color: #bdcfc8;
       border-top-color: #a7c7bc26;
       font-size: 10px;
+      margin-top: 7px;
+      min-height: 0;
     }
     #workspace .sidebar-bottom small {
       color: #94b6ae;
@@ -11397,7 +11406,7 @@
         display: none;
       }
       .sidebar-compact #workspace #navigation button[data-action="page"] {
-        padding: 7px;
+        padding: 5px;
         justify-content: center;
       }
       .sidebar-compact #workspace #navigation button.current::after {
@@ -11408,9 +11417,9 @@
         height: 4px;
       }
       .sidebar-compact #workspace #navigation .nav-icon {
-        width: 31px;
-        height: 31px;
-        flex-basis: 31px;
+        width: 26px;
+        height: 26px;
+        flex-basis: 26px;
       }
     }
     @media (max-width: 1150px) {
@@ -11426,8 +11435,8 @@
     }
     @media (max-width: 760px) {
       #workspace .sidebar {
-        width: min(310px, 87vw);
-        padding-top: 21px;
+        width: min(292px, 88vw);
+        padding-top: 14px;
       }
       #workspace #navigation button[data-action="page"] {
         min-height: 45px;
@@ -12201,6 +12210,627 @@
       }
     }
   }
+  /* A personal identity card and a tighter navigation rhythm. */
+  @media screen {
+    #workspace .sidebar {
+      height: 100dvh;
+    }
+    #workspace .sidebar-bottom {
+      display: block;
+    }
+    #workspace .sidebar .sidebar-note {
+      display: none;
+    }
+    #workspace .sidebar-cabinet strong {
+      cursor: default;
+    }
+    #workspace #navigation .nav-icon {
+      transition:
+        transform 180ms ease,
+        background 180ms ease;
+    }
+    #workspace #navigation button[data-action="page"]:hover .nav-icon {
+      transform: scale(1.06);
+    }
+    #workspace #navigation button[data-action="page"]:active {
+      transform: translateX(2px) scale(0.985);
+    }
+    #workspace #navigation .nav-label {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    #workspace #navigation button.current::before {
+      content: "";
+      position: absolute;
+      inset: 4px auto 4px 0;
+      width: 2px;
+      border-radius: 4px;
+      background: #a47f3e;
+      animation: nav-marker-enter 240ms ease both;
+    }
+    #workspace .sidebar-account {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-width: 0;
+      gap: 9px;
+      padding: 6px;
+      border: 1px solid #afc9bb30;
+      border-radius: 11px;
+      color: #e0eae0;
+      background: linear-gradient(110deg, #bedac00b, #bedac003);
+      cursor: pointer;
+      text-align: left;
+      font-family: Manrope, system-ui, sans-serif;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease;
+    }
+    #workspace .sidebar-account:hover {
+      background: #bedac016;
+      border-color: #d8bc7f88;
+    }
+    .account-avatar,
+    #workspace .workspace-header .operator-badge > b {
+      display: grid;
+      place-items: center;
+      flex: 0 0 30px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid #ceb57980;
+      color: #f0deb1;
+      background: radial-gradient(circle at 28% 20%, #497a6c, #183e4a 78%);
+      box-shadow: inset 0 0 0 3px #123e482b;
+      font:
+        800 10px/1 Manrope,
+        system-ui,
+        sans-serif;
+      letter-spacing: 0.3px;
+    }
+    #workspace .sidebar-account-copy {
+      display: block;
+      min-width: 0;
+      flex: 1;
+    }
+    #workspace .sidebar-account-copy strong,
+    #workspace .sidebar-account-copy small {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #workspace .sidebar-account-copy strong {
+      color: #e5eee4;
+      font-size: 10px;
+      line-height: 1.6;
+    }
+    #workspace .sidebar-account-copy small {
+      margin: 1px 0 0;
+      color: #b0c9c1;
+      font-size: 8px;
+      line-height: 1.5;
+    }
+    #workspace .sidebar-account > svg {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 13px;
+      color: #cab684;
+    }
+    #workspace .workspace-header .operator-badge {
+      padding: 3px 7px 3px 4px;
+      gap: 8px;
+      max-width: min(285px, 35vw);
+      border: 1px solid #bcd4c73d;
+      border-radius: 22px;
+      background: linear-gradient(105deg, #bcd4c70b, #bcd4c703);
+      text-align: left;
+      cursor: pointer;
+      font-family: Manrope, system-ui, sans-serif;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease;
+    }
+    #workspace .workspace-header .operator-badge:hover,
+    #workspace .workspace-header .operator-badge[aria-expanded="true"] {
+      border-color: #cfb780;
+      background: #bcd4c717;
+    }
+    #workspace .operator-badge .account-chip-copy {
+      min-width: 0;
+      display: block;
+    }
+    #workspace .operator-badge #user-label {
+      display: block;
+      color: #edf2e8;
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1.5;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #workspace .operator-badge #user-role {
+      display: block;
+      margin: 0;
+      color: #c8d4b5;
+      font-size: 8px;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #workspace .account-trigger-caret {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 13px;
+      color: #d7c08c;
+      transition: transform 180ms ease;
+    }
+    #workspace .account-trigger[aria-expanded="true"] .account-trigger-caret {
+      transform: rotate(180deg);
+    }
+    #workspace .sidebar-account:focus-visible,
+    #workspace .account-trigger:focus-visible {
+      outline: 2px solid #e4c58c;
+      outline-offset: 3px;
+    }
+    #workspace .work-grid-single {
+      grid-template-columns: 1fr;
+    }
+    .account-dialog {
+      width: min(510px, calc(100vw - 28px));
+      max-width: 510px;
+      max-height: calc(100dvh - 32px);
+      margin: auto;
+      padding: 0;
+      color: #173c48;
+      background: #e9efea;
+      border: 1px solid #d6bd83;
+      border-radius: 22px;
+      box-shadow: 0 30px 100px #061e3860;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      font:
+        12px/1.65 Manrope,
+        system-ui,
+        sans-serif;
+    }
+    .account-dialog[open] {
+      animation: account-arrive 220ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .account-dialog::backdrop {
+      background: #071e32a3;
+      backdrop-filter: blur(5px);
+    }
+    .account-cover {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 18px 25px 22px;
+      color: #ecf0df;
+      background:
+        radial-gradient(ellipse at 100% 100%, #35685a88, transparent 60%),
+        linear-gradient(130deg, #103448, #153f47);
+      border-bottom: 1px solid #d4bb7d;
+    }
+    .account-cover-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+    .account-cover .eyebrow {
+      color: #d8c089;
+      font-size: 8px;
+      letter-spacing: 1.6px;
+    }
+    .account-close {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      margin: 0;
+      padding: 0;
+      border: 1px solid #bad0bb55;
+      border-radius: 50%;
+      background: #c7dac60a;
+      color: #e9e5ce;
+      font: 24px/1 system-ui;
+      cursor: pointer;
+      transition:
+        background 160ms ease,
+        transform 160ms ease;
+    }
+    .account-close:hover {
+      background: #c7dac622;
+      transform: rotate(8deg);
+    }
+    .account-avatar.account-avatar-large {
+      width: 58px;
+      height: 58px;
+      font-size: 20px;
+      border-color: #d8c08b;
+      margin-bottom: 12px;
+    }
+    .account-cover h2 {
+      font:
+        800 clamp(19px, 4vw, 24px) / 1.35 Manrope,
+        system-ui,
+        sans-serif;
+      color: #f0f1e3;
+      margin: 0;
+      max-width: 90%;
+      overflow-wrap: anywhere;
+      letter-spacing: -0.5px;
+    }
+    .account-cover > p {
+      color: #d7d4b4;
+      margin: 5px 0 9px;
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+    .account-username {
+      display: inline-block;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      border: 1px solid #bbd0ba33;
+      border-radius: 20px;
+      padding: 3px 10px;
+      color: #b9d3c4;
+      background: #d6e6cf08;
+      font-size: 10px;
+    }
+    .account-cover-art {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .account-cover-art img {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -15px;
+      bottom: 9px;
+      object-fit: contain;
+      opacity: 0.075;
+      filter: brightness(0) invert(1);
+    }
+    .account-cover-art > span {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 1px solid #d5c18b20;
+      border-radius: 50%;
+      right: -42px;
+      bottom: -15px;
+    }
+    .account-cover-art > span::before,
+    .account-cover-art > span::after {
+      content: "";
+      position: absolute;
+      border: 1px solid #d5c18b16;
+      border-radius: 50%;
+      inset: 14px;
+    }
+    .account-cover-art > span::after {
+      inset: 30px;
+      border-style: dashed;
+    }
+    .account-body {
+      padding: 23px 25px 24px;
+      background: radial-gradient(
+        ellipse at 100% 0,
+        #c6ddd3a1,
+        transparent 65%
+      );
+    }
+    .account-facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 20px;
+      margin: 0 0 22px;
+    }
+    .account-facts > div {
+      min-width: 0;
+      border-left: 2px solid #b69d6355;
+      padding-left: 10px;
+    }
+    .account-facts dt {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      color: #4e6c67;
+      margin: 0 0 3px;
+    }
+    .account-facts dd {
+      margin: 0;
+      color: #173d45;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.65;
+      overflow-wrap: anywhere;
+    }
+    .account-section-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: space-between;
+      padding-top: 17px;
+      margin-bottom: 11px;
+      border-top: 1px solid #bfd0c3;
+    }
+    .account-section-heading h3 {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 800;
+      color: #1b4149;
+    }
+    .account-section-heading > span {
+      font-size: 9px;
+      color: #5e756b;
+    }
+    .account-assignment {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #b4cbb94d;
+    }
+    .account-assignment:last-child {
+      border-bottom: 0;
+    }
+    .account-assignment > div {
+      min-width: 0;
+    }
+    .account-assignment-mark {
+      display: grid;
+      place-items: center;
+      flex: 0 0 30px;
+      height: 30px;
+      border: 1px solid #a4c0ab;
+      border-radius: 9px;
+      color: #39705a;
+      background: #dce7da;
+    }
+    .account-assignment-mark svg {
+      width: 16px;
+      height: 16px;
+    }
+    .account-assignment.is-current .account-assignment-mark {
+      background: #244d4e;
+      color: #e5c991;
+      border-color: #244d4e;
+    }
+    .account-assignment strong {
+      font-size: 11px;
+      line-height: 1.5;
+      color: #193e48;
+    }
+    .account-assignment p {
+      font-size: 10px;
+      margin: 3px 0;
+      color: #466961;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+    .account-assignment small {
+      font-size: 9px;
+      color: #5c7467;
+    }
+    .account-help {
+      font-size: 10px;
+      line-height: 1.7;
+      margin: 17px 0;
+      color: #5a7169;
+    }
+    .account-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+    .account-actions .button {
+      flex: 1;
+      justify-content: center;
+      min-height: 40px;
+      font:
+        700 10px/1.5 Manrope,
+        system-ui,
+        sans-serif;
+      padding: 10px 13px;
+      border-radius: 10px;
+    }
+    .account-actions .button.secondary {
+      color: #254c4c;
+      border: 1px solid #a6bda9;
+      background: #e1e9de;
+    }
+    .account-actions .account-logout {
+      color: #f4ead4;
+      background: #21464e;
+      border: 1px solid #21464e;
+    }
+    .account-actions .button:hover {
+      filter: brightness(0.97);
+    }
+    .account-dialog button:focus-visible {
+      outline: 2px solid #b08b47;
+      outline-offset: 3px;
+    }
+    @keyframes account-arrive {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    @keyframes nav-marker-enter {
+      from {
+        transform: scaleY(0.2);
+        opacity: 0;
+      }
+      to {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+    }
+    @media (min-width: 761px) {
+      body.sidebar-compact {
+        --nav-width: 74px;
+      }
+      .sidebar-compact #workspace .sidebar {
+        padding: 13px 8px 10px;
+      }
+      .sidebar-compact #workspace .sidebar .brand {
+        gap: 8px;
+        padding-bottom: 10px;
+      }
+      .sidebar-compact #workspace #navigation {
+        padding: 5px 1px;
+      }
+      .sidebar-compact #workspace #navigation button.nav-group-toggle {
+        min-height: 25px;
+        padding: 3px;
+        margin-bottom: 2px;
+      }
+      .sidebar-compact #workspace #navigation button[data-action="page"] {
+        min-height: 35px;
+      }
+      .sidebar-compact #workspace .sidebar-account {
+        justify-content: center;
+        padding: 6px 0;
+      }
+      .sidebar-compact #workspace .sidebar-account-copy,
+      .sidebar-compact #workspace .sidebar-account > svg {
+        display: none;
+      }
+      .sidebar-compact #workspace .sidebar-bottom {
+        padding-top: 7px;
+        margin: 5px 0 0;
+      }
+    }
+    @media (max-width: 760px) {
+      #workspace #navigation button[data-action="page"] {
+        min-height: 44px;
+        padding: 8px 10px;
+        margin: 1px 0;
+      }
+      #workspace #navigation button.nav-group-toggle {
+        min-height: 36px;
+        padding: 8px;
+      }
+      #workspace .sidebar-account {
+        min-height: 44px;
+      }
+      #workspace .workspace-header .topbar {
+        grid-template-columns: 30px minmax(0, 1fr) auto;
+        min-height: 48px;
+        gap: 7px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+      #workspace .workspace-header .topbar-brand,
+      #workspace .workspace-header .topbar-date {
+        display: none;
+      }
+      #workspace .workspace-header .operator-badge {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: start;
+        max-width: 100%;
+        min-width: 0;
+        border-radius: 12px;
+        padding: 3px 5px 3px 3px;
+        gap: 6px;
+      }
+      #workspace .workspace-header .operator-badge > b {
+        width: 27px;
+        height: 27px;
+        flex-basis: 27px;
+      }
+      #workspace .operator-badge #user-label {
+        font-size: 10px;
+      }
+      #workspace .operator-badge #user-role {
+        font-size: 7.5px;
+      }
+      #workspace .workspace-header .topbar-actions {
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+        flex-wrap: nowrap;
+        gap: 4px;
+      }
+      #workspace .workspace-header .topbar-actions > button {
+        width: 29px;
+        min-height: 32px;
+        padding: 6px !important;
+      }
+      #workspace .account-trigger-caret {
+        display: none;
+      }
+      .account-dialog {
+        width: calc(100vw - 22px);
+        max-height: calc(100dvh - 22px);
+        border-radius: 17px;
+      }
+      .account-cover {
+        padding: 15px 19px 20px;
+      }
+      .account-body {
+        padding: 20px 19px;
+      }
+      .account-close {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+      }
+      .account-facts {
+        gap: 15px 12px;
+      }
+      .account-actions .button {
+        min-height: 44px;
+      }
+    }
+    @media (max-width: 360px) {
+      .account-facts {
+        grid-template-columns: 1fr;
+      }
+      .account-actions {
+        flex-direction: column;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .account-dialog[open],
+      #workspace #navigation button.current::before {
+        animation: none;
+      }
+      #workspace .sidebar-account,
+      #workspace .account-trigger,
+      #workspace .account-trigger-caret,
+      #workspace #navigation .nav-icon,
+      .account-close {
+        transition: none;
+      }
+      #workspace #navigation button[data-action="page"]:hover .nav-icon {
+        transform: none;
+      }
+    }
+  }
+  @media print {
+    .account-dialog {
+      display: none !important;
+    }
+  }
 </style>
 
   <link rel="stylesheet" href="../assets/access.css"><script defer src="../assets/access.js"></script><style>.archive-unified-note{margin:0 0 14px;padding:10px 14px;border-left:2px solid #b39b61;background:#dbe9e7;color:#365a66;font-size:12px}</style></head>
@@ -12366,7 +12996,7 @@
         <small class="login-footer">Organisasi Santri Dayah Ruhul Qurani</small>
       </div>
     </section>
-    <div id="workspace" hidden>
+    <div id="workspace" data-osda-ui="identitas-sidebar-20261028" hidden>
       <a class="skip" href="#content">Lewati ke konten</a>
       <aside class="sidebar" id="sidebar">
         <div class="brand">
@@ -12403,14 +13033,36 @@
         </div>
         <span class="nav-caption">PUSAT ADMINISTRASI ORGANISASI</span>
         <nav aria-label="Menu utama" id="navigation"></nav>
-        <div class="sidebar-note">
-          <span class="sidebar-note-mark" aria-hidden="true">✦</span>
-          <p>Berjalan bersama.<br /><strong>Bertumbuh bersama.</strong></p>
-          <small>Santriwan · Santriwati</small>
-        </div>
         <div class="sidebar-bottom">
-          <span class="online-dot"></span>
-          <div>Ruang internal OSDA<small>Akses sesuai penugasan</small></div>
+          <button
+            type="button"
+            class="sidebar-account"
+            data-account-open
+            aria-haspopup="dialog"
+            aria-controls="account-dialog"
+            aria-expanded="false"
+            aria-label="Buka identitas akun"
+          >
+            <span
+              class="account-avatar"
+              data-account-initials
+              aria-hidden="true"
+              >RQ</span
+            >
+            <span class="sidebar-account-copy"
+              ><strong data-account-name>Akun pengurus</strong
+              ><small data-account-role>Identitas akun saya</small></span
+            >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <path d="m9 5 7 7-7 7" />
+            </svg>
+          </button>
         </div>
       </aside>
       <button type="button" class="menu-scrim" aria-label="Tutup menu"></button>
@@ -12483,27 +13135,34 @@
                   </svg>
                   <span>Muat ulang</span>
                 </button>
-                <button
-                  class="button secondary small"
-                  id="password-open"
-                  type="button"
-                >
-                  Kata sandi
-                </button>
-                <button
-                  class="button secondary small"
-                  id="logout-button"
-                  type="button"
-                >
-                  Keluar
-                </button>
               </div>
-              <span class="operator-badge"
-                ><b aria-hidden="true">OP</b
-                ><span id="user-label"
-                  >Akses pengurus<small>Ruang internal</small></span
-                ></span
+              <button
+                type="button"
+                class="operator-badge account-trigger"
+                data-account-open
+                aria-haspopup="dialog"
+                aria-controls="account-dialog"
+                aria-expanded="false"
+                aria-label="Buka identitas akun"
               >
+                <b id="user-initials" data-account-initials aria-hidden="true"
+                  >RQ</b
+                >
+                <span class="account-chip-copy"
+                  ><span id="user-label">Akun pengurus</span
+                  ><small id="user-role">Identitas akun saya</small></span
+                >
+                <svg
+                  class="account-trigger-caret"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  aria-hidden="true"
+                >
+                  <path d="m4 6 4 4 4-4" />
+                </svg>
+              </button>
             </div>
           </div>
           <div class="workspace-hero">
@@ -12724,6 +13383,74 @@
         </footer>
       </div>
     </div>
+    <dialog
+      id="account-dialog"
+      class="account-dialog"
+      aria-labelledby="account-title"
+    >
+      <div class="account-cover">
+        <div class="account-cover-art" aria-hidden="true">
+          <span class="logo-frame"
+  ><img
+    alt="Logo OSDA RQ"
+    width="116"
+    height="116"
+    src="../assets/osda-logo.png"
+/></span>
+<span
+          ></span>
+        </div>
+        <div class="account-cover-top">
+          <span class="eyebrow">OSDA RQ · IDENTITAS AKUN</span
+          ><button
+            type="button"
+            class="account-close"
+            data-account-close
+            aria-label="Tutup identitas akun"
+          >
+            ×
+          </button>
+        </div>
+        <span
+          class="account-avatar account-avatar-large"
+          id="account-avatar"
+          aria-hidden="true"
+          >RQ</span
+        >
+        <h2 id="account-title">Identitas akun saya</h2>
+        <p id="account-primary-role"></p>
+        <span class="account-username" id="account-username"></span>
+      </div>
+      <div class="account-body">
+        <dl class="account-facts" id="account-facts"></dl>
+        <section
+          class="account-assignments"
+          aria-labelledby="account-assignments-title"
+        >
+          <div class="account-section-heading">
+            <h3 id="account-assignments-title">Penugasan saya</h3>
+            <span id="account-assignment-count"></span>
+          </div>
+          <div id="account-grants"></div>
+        </section>
+        <p class="account-help">
+          Perubahan nama, jabatan, atau penugasan dapat diajukan kepada admin
+          OSDA.
+        </p>
+        <div class="account-actions">
+          <button class="button secondary" id="password-open" type="button">
+            Ubah kata sandi
+          </button>
+          <button
+            class="button account-logout"
+            id="logout-button"
+            type="button"
+          >
+            Keluar dari akun
+          </button>
+        </div>
+      </div>
+    </dialog>
     <dialog id="password-dialog" aria-labelledby="password-title">
       <form id="password-form">
         <h2 id="password-title">Ganti kata sandi</h2>
