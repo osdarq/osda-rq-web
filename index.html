@@ -195,226 +195,65 @@
             </div>
           </div>
           <aside class="hero-art" aria-label="Identitas kepengurusan OSDA RQ">
-            <div
-              class="lanyard-stage"
-              data-lanyard
-              aria-label="Kartu OSDA RQ dengan lanyard interaktif"
-            >
-              <div class="lanyard-plane" data-lanyard-plane>
-                <svg
-                  class="lanyard-ribbon"
-                  viewBox="0 0 440 580"
-                  fill="none"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <defs>
-                    <pattern
-                      id="rq-lanyard-weave"
-                      width="8"
-                      height="8"
-                      patternUnits="userSpaceOnUse"
-                    >
-                      <rect width="8" height="8" fill="#164a4e" />
-                      <path
-                        d="M0 0 8 8M-4 0 4 8M4 0 12 8"
-                        stroke="#a6c3a9"
-                        stroke-opacity=".13"
-                        stroke-width=".7"
-                      />
-                      <path
-                        d="M0 8 8 0"
-                        stroke="#041f2b"
-                        stroke-opacity=".3"
-                        stroke-width=".6"
-                      />
-                    </pattern>
-                    <path
-                      id="rq-lanyard-left"
-                      data-lanyard-curve="left"
-                      d="M182 10C182 58 205 96 220 145"
-                    />
-                    <path
-                      id="rq-lanyard-right"
-                      data-lanyard-curve="right"
-                      d="M258 10C258 58 235 96 220 145"
-                    />
-                  </defs>
-                  <g class="lanyard-back-strap">
-                    <use
-                      href="#rq-lanyard-right"
-                      class="lanyard-strap-shadow"
-                    />
-                    <use href="#rq-lanyard-right" class="lanyard-strap-edge" />
-                    <use
-                      href="#rq-lanyard-right"
-                      class="lanyard-strap-fabric"
-                    />
-                    <path
-                      data-lanyard-stitch="right-a"
-                      class="lanyard-stitch"
-                    />
-                    <path
-                      data-lanyard-stitch="right-b"
-                      class="lanyard-stitch"
-                    />
-                    <text class="lanyard-print">
-                      <textPath href="#rq-lanyard-right" startOffset="20%">
-                        RUHUL QURANI
-                      </textPath>
-                    </text>
-                  </g>
-                  <g class="lanyard-front-strap">
-                    <use href="#rq-lanyard-left" class="lanyard-strap-shadow" />
-                    <use href="#rq-lanyard-left" class="lanyard-strap-edge" />
-                    <use href="#rq-lanyard-left" class="lanyard-strap-fabric" />
-                    <path data-lanyard-stitch="left-a" class="lanyard-stitch" />
-                    <path data-lanyard-stitch="left-b" class="lanyard-stitch" />
-                    <text class="lanyard-print">
-                      <textPath href="#rq-lanyard-left" startOffset="17%">
-                        OSDA RQ · AMANAH
-                      </textPath>
-                    </text>
-                  </g>
-                  <use
-                    href="#rq-lanyard-left"
-                    class="lanyard-hit-area"
-                    data-lanyard-handle="left"
+            <div class="identity-card" data-tilt>
+              <svg
+                class="identity-tracery"
+                viewBox="0 0 360 410"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path
+                  class="identity-outline"
+                  d="M28 9H332Q351 9 351 28V382Q351 401 332 401H28Q9 401 9 382V28Q9 9 28 9Z"
+                />
+                <path
+                  class="identity-tracer"
+                  d="M28 9H332Q351 9 351 28V382Q351 401 332 401H28Q9 401 9 382V28Q9 9 28 9Z"
+                />
+              </svg>
+              <div class="identity-sweep" aria-hidden="true"></div>
+              <span class="identity-glint glint-one" aria-hidden="true">✦</span
+              ><span class="identity-glint glint-two" aria-hidden="true"
+                >✦</span
+              >
+              <div class="identity-heading">
+                <div class="identity-logo-wrap">
+                  <span class="identity-logo-orbit" aria-hidden="true"></span
+                  ><img
+                    src="./assets/osda-logo.png"
+                    alt="Lambang OSDA RQ"
+                    width="60"
+                    height="60"
                   />
-                  <use
-                    href="#rq-lanyard-right"
-                    class="lanyard-hit-area"
-                    data-lanyard-handle="right"
-                  />
-                  <rect
-                    class="lanyard-anchor"
-                    x="170"
-                    y="0"
-                    width="100"
-                    height="12"
-                    rx="6"
-                  />
-                  <path class="lanyard-anchor-line" d="M186 4H254" />
-                </svg>
-                <div
-                  class="lanyard-ground"
-                  data-lanyard-shadow
-                  aria-hidden="true"
-                ></div>
-                <div
-                  class="lanyard-card-body"
-                  data-lanyard-body
-                  role="button"
-                  tabindex="0"
-                  aria-label="Kartu OSDA RQ, dapat ditarik dan diayunkan"
-                  aria-describedby="lanyard-help public-period public-cabinet"
-                  aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Enter Home Escape"
-                >
-                  <div class="lanyard-hardware" aria-hidden="true">
-                    <span class="lanyard-ring"></span
-                    ><span class="lanyard-swivel"></span
-                    ><span class="lanyard-clasp"></span>
-                  </div>
-                  <div class="identity-card">
-                    <span class="lanyard-card-slot" aria-hidden="true"></span>
-                    <svg
-                      class="identity-tracery"
-                      viewBox="0 0 360 410"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        class="identity-outline"
-                        d="M28 9H332Q351 9 351 28V382Q351 401 332 401H28Q9 401 9 382V28Q9 9 28 9Z"
-                      />
-                      <path
-                        class="identity-tracer"
-                        d="M28 9H332Q351 9 351 28V382Q351 401 332 401H28Q9 401 9 382V28Q9 9 28 9Z"
-                      />
-                    </svg>
-                    <div class="identity-sweep" aria-hidden="true"></div>
-                    <span class="identity-glint glint-one" aria-hidden="true"
-                      >✦</span
-                    ><span class="identity-glint glint-two" aria-hidden="true"
-                      >✦</span
-                    >
-                    <div class="identity-heading">
-                      <div class="identity-logo-wrap">
-                        <span
-                          class="identity-logo-orbit"
-                          aria-hidden="true"
-                        ></span
-                        ><img
-                          src="./assets/osda-logo.png"
-                          alt="Lambang OSDA RQ"
-                          width="60"
-                          height="60"
-                        />
-                      </div>
-                      <div class="identity-brand">
-                        <span>ORGANISASI SANTRI</span
-                        ><strong>OSDA <em>RQ</em></strong
-                        ><small>DAYAH RUHUL QURANI</small>
-                      </div>
-                      <span class="identity-mark" aria-hidden="true"
-                        ><svg class="icon"><use href="#i-spark" /></svg
-                      ></span>
-                    </div>
-                    <p class="identity-basmala" lang="ar" dir="rtl">
-                      بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-                    </p>
-                    <p class="identity-motto">
-                      Merawat amanah.<em>Meninggalkan arti.</em>
-                    </p>
-                    <div class="identity-cabinet">
-                      <div class="identity-edition">
-                        <span id="public-term-number">03</span
-                        ><small>PERIODE</small>
-                      </div>
-                      <div class="identity-period">
-                        <span id="public-period">OSDA RQ KE-3</span>
-                        <p id="public-cabinet">
-                          Satu kabinet, satu kebersamaan.
-                        </p>
-                        <small>SANTRIWAN &amp; SANTRIWATI</small>
-                      </div>
-                    </div>
-                    <div class="identity-values">
-                      <span>ADAB</span><i aria-hidden="true"></i
-                      ><span>AMANAH</span><i aria-hidden="true"></i
-                      ><span>PENGABDIAN</span>
-                    </div>
-                  </div>
+                </div>
+                <div class="identity-brand">
+                  <span>ORGANISASI SANTRI</span><strong>OSDA <em>RQ</em></strong
+                  ><small>DAYAH RUHUL QURANI</small>
+                </div>
+                <span class="identity-mark" aria-hidden="true"
+                  ><svg class="icon"><use href="#i-spark" /></svg
+                ></span>
+              </div>
+              <p class="identity-basmala" lang="ar" dir="rtl">
+                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+              </p>
+              <p class="identity-motto">
+                Merawat amanah.<em>Meninggalkan arti.</em>
+              </p>
+              <div class="identity-cabinet">
+                <div class="identity-edition">
+                  <span id="public-term-number">03</span><small>PERIODE</small>
+                </div>
+                <div class="identity-period">
+                  <span id="public-period">OSDA RQ KE-3</span>
+                  <p id="public-cabinet">Satu kabinet, satu kebersamaan.</p>
+                  <small>SANTRIWAN &amp; SANTRIWATI</small>
                 </div>
               </div>
-            </div>
-            <div class="lanyard-controls">
-              <span class="lanyard-hand" aria-hidden="true"
-                ><svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M8 12V5a2 2 0 0 1 4 0v7-3a2 2 0 0 1 4 0v3-1a2 2 0 0 1 4 0v4c0 4-3 7-7 7h-1c-2 0-3-1-4-3l-4-6a2 2 0 0 1 3-2l1 1Z"
-                  /></svg
-              ></span>
-              <p id="lanyard-help">
-                <strong>Tarik. Ayunkan. Lepaskan.</strong
-                ><span
-                  >Tarik kartu atau tali · panah untuk mengayun · Home untuk
-                  mengatur ulang.</span
-                >
-              </p>
-              <button
-                type="button"
-                class="lanyard-reset"
-                data-lanyard-reset
-                aria-label="Atur ulang posisi kartu OSDA"
-                title="Atur ulang kartu"
-              >
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path
-                    d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"
-                  />
-                </svg>
-              </button>
+              <div class="identity-values">
+                <span>ADAB</span><i aria-hidden="true"></i><span>AMANAH</span
+                ><i aria-hidden="true"></i><span>PENGABDIAN</span>
+              </div>
             </div>
             <a
               class="hero-background-open"
