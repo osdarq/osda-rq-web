@@ -5798,7 +5798,9 @@ const OSDA_MEDIA = {
   function sizeWorkspaceHero_() {
     const meaning = $("#hero-meaning");
     if (!meaning) return;
-    const mode = (window.innerWidth || 1024) <= 760 ? "compact" : "full";
+    const mode = $(".workspace-header-compact")
+      ? "unified"
+      : (window.innerWidth || 1024) <= 760 ? "compact" : "full";
     if (mode !== workspaceHeroUI.layout) {
       workspaceHeroUI.layout = mode;
       meaning.toggleAttribute("open", mode === "full");
@@ -5819,6 +5821,18 @@ const OSDA_MEDIA = {
       );
       document.addEventListener("visibilitychange", syncWorkspaceHeroMotion_);
       window.addEventListener("resize", sizeWorkspaceHero_, { passive: true });
+      document.addEventListener("click", (event) => {
+        const meaning = $("#hero-meaning");
+        if ($(".workspace-header-compact") && !event.target.closest?.("#hero-meaning"))
+          meaning?.removeAttribute("open");
+      });
+      document.addEventListener("keydown", (event) => {
+        const meaning = $("#hero-meaning");
+        if (event.key !== "Escape" || !$(".workspace-header-compact") || !meaning?.hasAttribute("open") || $("dialog[open]")) return;
+        const restore = document.activeElement && meaning.contains(document.activeElement);
+        meaning.removeAttribute("open");
+        if (restore) meaning.querySelector("summary")?.focus?.();
+      });
       if (typeof window.IntersectionObserver === "function") {
         workspaceHeroUI.observer = new window.IntersectionObserver(
           (entries) => {
@@ -5835,6 +5849,7 @@ const OSDA_MEDIA = {
     syncWorkspaceHeroMotion_();
     if (workspaceHeroUI.page !== state.page) {
       workspaceHeroUI.page = state.page;
+      if ($(".workspace-header-compact")) $("#hero-meaning")?.removeAttribute("open");
       if (!workspaceHeroUI.preference?.matches && !document.hidden)
         hero.querySelector(".page-heading")?.animate?.(
           [
@@ -5861,6 +5876,7 @@ const OSDA_MEDIA = {
     manageUI.tab = "data";
     workspaceHeroUI.page = "";
     workspaceHeroUI.layout = "";
+    $("#hero-meaning")?.removeAttribute("open");
     workspaceHeroUI.node?.style.setProperty("--hero-motion-state", "paused");
   }
   const manageButton_ = (label, action, id = "", danger = false) =>
