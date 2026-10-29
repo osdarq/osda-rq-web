@@ -13216,6 +13216,88 @@
       display: none !important;
     }
   }
+/* Canonical HD shield. Preserve the complete artwork, including both text lines. */
+.logo-frame.osda-logo-hd-frame {
+  display: grid;
+  place-items: center;
+  background: #fff;
+}
+.logo-frame img.osda-logo-hd,
+#login-screen .login-logo img.osda-logo-hd,
+#login-screen.access-fit .login-logo img.osda-logo-hd,
+.meeting-intro-emblem .logo-frame img.osda-logo-hd,
+.meeting-mode .meeting-seal .logo-frame img.osda-logo-hd {
+  position: static !important;
+  inset: auto !important;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  transform: none !important;
+  border-radius: 0 !important;
+  filter: none !important;
+  padding: 3px;
+}
+#login-screen .login-logo .osda-logo-hd-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  border: 1px solid #a3b7b5;
+}
+.meeting-intro-emblem .osda-logo-hd-frame,
+.meeting-mode .meeting-seal .osda-logo-hd-frame {
+  border-radius: 9px !important;
+  background: #fff !important;
+}
+#workspace .workspace-hero-emblem .osda-logo-hd-frame {
+  position: absolute;
+  inset: 13px;
+  width: 90px;
+  height: 90px;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  mix-blend-mode: multiply;
+  opacity: 0.28;
+}
+#workspace .workspace-hero-emblem img.osda-logo-hd {
+  position: static !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  transform: none !important;
+  filter: none !important;
+  padding: 0;
+  opacity: 1;
+}
+.landing-logo {
+  background: #fff;
+  border-radius: 9px;
+}
+.landing-logo img.osda-logo-hd,
+.identity-logo-wrap img.osda-logo-hd {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+  transform: none;
+  padding: 3px;
+}
+.identity-logo-wrap {
+  background: #fff;
+  border-radius: 12px;
+  overflow: visible;
+}
+.identity-logo-wrap img.osda-logo-hd { padding: 4px; }
+@media print {
+  .report-letterhead img { object-fit: contain; }
+}
+
 </style>
 
   <link rel="stylesheet" href="./assets/access.css"><script defer src="./assets/access.js"></script><style>.archive-unified-note{margin:0 0 14px;padding:10px 14px;border-left:2px solid #b39b61;background:#dbe9e7;color:#365a66;font-size:12px}</style></head>
@@ -13253,13 +13335,7 @@
         >
         <div class="login-panel-body">
           <div class="login-brandline">
-            <div class="login-logo"><span class="logo-frame"
-  ><img
-    alt="Logo OSDA RQ"
-    width="116"
-    height="116"
-    src="./assets/osda-logo.png"
-/></span>
+            <div class="login-logo"><span class="logo-frame osda-logo-hd-frame"><img class="osda-logo-hd" alt="Logo OSDA RQ — Ruhul Qurani Aceh Barat" width="1254" height="1254" decoding="async" src="./assets/osda-logo.png" /></span>
 </div>
             <span class="eyebrow"
               >RUANG PENGURUS<small
@@ -13393,13 +13469,7 @@
       <a class="skip" href="#content">Lewati ke konten</a>
       <aside class="sidebar" id="sidebar">
         <div class="brand">
-          <span class="logo-frame"
-  ><img
-    alt="Logo OSDA RQ"
-    width="116"
-    height="116"
-    src="./assets/osda-logo.png"
-/></span>
+          <span class="logo-frame osda-logo-hd-frame"><img class="osda-logo-hd" alt="Logo OSDA RQ — Ruhul Qurani Aceh Barat" width="1254" height="1254" decoding="async" src="./assets/osda-logo.png" /></span>
 
           <div class="brand-text">OSDA RQ<small>DAYAH RUHUL QURANI</small></div>
           <button
@@ -13565,13 +13635,7 @@
                 <span
                   class="workspace-hero-orbit workspace-hero-orbit-inner"
                 ></span>
-                <span class="logo-frame"
-  ><img
-    alt="Logo OSDA RQ"
-    width="116"
-    height="116"
-    src="./assets/osda-logo.png"
-/></span>
+                <span class="logo-frame osda-logo-hd-frame"><img class="osda-logo-hd" alt="Logo OSDA RQ — Ruhul Qurani Aceh Barat" width="1254" height="1254" decoding="async" src="./assets/osda-logo.png" /></span>
 
               </div>
               <svg
@@ -13783,13 +13847,7 @@
     >
       <div class="account-cover">
         <div class="account-cover-art" aria-hidden="true">
-          <span class="logo-frame"
-  ><img
-    alt="Logo OSDA RQ"
-    width="116"
-    height="116"
-    src="./assets/osda-logo.png"
-/></span>
+          <span class="logo-frame osda-logo-hd-frame"><img class="osda-logo-hd" alt="Logo OSDA RQ — Ruhul Qurani Aceh Barat" width="1254" height="1254" decoding="async" src="./assets/osda-logo.png" /></span>
 <span></span>
         </div>
         <div class="account-cover-top">
@@ -13922,13 +13980,7 @@
       <span class="meeting-corner corner-sw" aria-hidden="true"></span>
       <span class="meeting-corner corner-se" aria-hidden="true"></span>
       <header class="meeting-top">
-        <div class="meeting-seal"><span class="logo-frame"
-  ><img
-    alt="Logo OSDA RQ"
-    width="116"
-    height="116"
-    src="./assets/osda-logo.png"
-/></span>
+        <div class="meeting-seal"><span class="logo-frame osda-logo-hd-frame"><img class="osda-logo-hd" alt="Logo OSDA RQ — Ruhul Qurani Aceh Barat" width="1254" height="1254" decoding="async" src="./assets/osda-logo.png" /></span>
 </div>
         <div class="meeting-heading">
           <p class="meeting-institution" id="meeting-institution">
