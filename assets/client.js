@@ -660,14 +660,52 @@
     "Mentor Bidang",
     "Anggota",
   ];
+  const readCache_ = { generation: 0, values: new Map(), pending: new Map() };
+  const cacheableReads_ = new Set([
+    "personalData",
+    "handoverData",
+    "guideData",
+    "notificationData",
+    "dashboardContext",
+    "officeData",
+    "manualData",
+    "galleryData",
+    "eventDossier",
+    "eventArchiveChoices",
+    "listArchives",
+  ]);
+  function resetReadCache_() {
+    readCache_.generation++;
+    readCache_.values.clear();
+    readCache_.pending.clear();
+  }
+  function copyReadResult_(data) {
+    return data == null ? data : JSON.parse(JSON.stringify(data));
+  }
   function api(name, arg) {
     const token = authLive.token;
+    const cachedRead = cacheableReads_.has(name);
+    if (!cachedRead) resetReadCache_();
+    const generation = readCache_.generation;
+    const key = JSON.stringify([
+      token,
+      generation,
+      name,
+      arg === undefined ? null : arg,
+    ]);
+    if (token && cachedRead) {
+      const cached = readCache_.values.get(key);
+      if (cached && Date.now() >= cached.at && Date.now() - cached.at < 15000)
+        return Promise.resolve(copyReadResult_(cached.data));
+      const pending = readCache_.pending.get(key);
+      if (pending) return pending.then(copyReadResult_);
+    }
     const finish =
       token &&
       !["notificationData", "dashboardContext", "guideData"].includes(name)
         ? beginRequestLoading_(requestLoadingLabel_(name))
         : () => {};
-    return new Promise((resolve, reject) => {
+    const request = new Promise((resolve, reject) => {
       if (!token) {
         reject(Error("Silakan masuk terlebih dahulu."));
         return;
@@ -689,7 +727,29 @@
           reject(Error(message));
         })
         .rpc({ token, action: name, argument: arg === undefined ? null : arg });
-    }).finally(finish);
+    })
+      .then((data) => {
+        if (
+          cachedRead &&
+          authLive.token === token &&
+          readCache_.generation === generation
+        ) {
+          if (readCache_.values.size >= 24)
+            readCache_.values.delete(readCache_.values.keys().next().value);
+          readCache_.values.set(key, {
+            at: Date.now(),
+            data: copyReadResult_(data),
+          });
+        }
+        return data;
+      })
+      .finally(() => {
+        if (readCache_.pending.get(key) === request)
+          readCache_.pending.delete(key);
+        finish();
+      });
+    if (cachedRead) readCache_.pending.set(key, request);
+    return cachedRead ? request.then(copyReadResult_) : request;
   }
   function toast(message) {
     $("#toast").textContent = message;
@@ -2877,6 +2937,7 @@
   }
   setInterval(tick, 1000);
   function initializeClient_() {
+    state.query.month = OSDA_BOOT.month;
     const missing = [
       [
         "AuthClient.html",
@@ -3131,6 +3192,7 @@ const authLive = {
   }
   function loginMode(mode) {
     authLive.mode = mode;
+    document.querySelector("#login-screen").dataset.mode = mode;
     const setup = mode !== "login";
     document.querySelector("#login-title").textContent = setup
       ? mode === "bootstrap"
@@ -3155,6 +3217,7 @@ const authLive = {
     document.querySelector("#login-error").textContent = "";
   }
   function showLogin(message) {
+    resetReadCache_();
     resetAccountIdentity_();
     resetLoading_();
     setMobileSidebar_(false);
@@ -3186,6 +3249,9 @@ const authLive = {
     state.query = { scope: "Semua", month: OSDA_BOOT.month };
     document.querySelector("#workspace").hidden = true;
     document.querySelector("#login-screen").hidden = false;
+    document.body.classList.add("login-active");
+    document.body.classList.remove("workspace-entering");
+    fitLoginViewport_();
     document.querySelector("#page").replaceChildren();
     document.querySelector("#form-fields").replaceChildren();
     for (const d of document.querySelectorAll("dialog[open]")) d.close();
@@ -3195,6 +3261,7 @@ const authLive = {
     document.querySelector("#login-error").textContent = message || "";
   }
   async function acceptSession(result) {
+    resetReadCache_();
     authLive.token = result.token;
     authLive.user = result.user;
     if (result.user.must_change_password) {
@@ -3203,6 +3270,15 @@ const authLive = {
     }
     document.querySelector("#login-screen").hidden = true;
     document.querySelector("#workspace").hidden = false;
+    document.body.classList.remove("login-active");
+    window.scrollTo?.(0, 0);
+    if (!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      document.body.classList.add("workspace-entering");
+      window.setTimeout(
+        () => document.body.classList.remove("workspace-entering"),
+        420,
+      );
+    }
     document.querySelector("#user-label").textContent = result.user.name;
     state.page = "Ringkasan";
     await load();
@@ -3248,12 +3324,23 @@ const authLive = {
     }
   }
   function startAuth() {
+    fitLoginViewport_();
     document.querySelector("#owner-tools").hidden = !OSDA_BOOT.owner;
     document.querySelector("#owner-setup").textContent = OSDA_BOOT.needs_admin
       ? "Siapkan admin pertama"
       : "Pemulihan admin oleh pemilik proyek";
     if (OSDA_BOOT.owner && OSDA_BOOT.needs_admin) loginMode("bootstrap");
   }
+  function fitLoginViewport_() {
+    const screen = document.querySelector("#login-screen");
+    const height = window.visualViewport?.height || window.innerHeight;
+    if (screen && !screen.hidden && height > 0)
+      screen.style.setProperty("--login-height", Math.round(height) + "px");
+  }
+  window.addEventListener("resize", fitLoginViewport_, { passive: true });
+  window.visualViewport?.addEventListener("resize", fitLoginViewport_, {
+    passive: true,
+  });
   document
     .querySelector("#owner-setup")
     .addEventListener("click", () =>
@@ -6296,5 +6383,5 @@ showLogin = function (...args) {
   $("#month-filter").closest("label").hidden = false;
 };
 
-function startOsdaClient_(){try{initializeClient_()}catch(e){window.OSDA_STARTUP?.fail(e)}}
+async function startOsdaClient_(){try{if(window.OSDA_BOOT_READY)await window.OSDA_BOOT_READY;initializeClient_()}catch(e){window.OSDA_STARTUP?.fail(e)}}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",startOsdaClient_,{once:true});else startOsdaClient_();

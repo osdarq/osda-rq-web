@@ -4875,6 +4875,391 @@
       display: none !important;
     }
   }
+  /* Login viewport and entry transitions. */
+  body.login-active {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  #login-screen.access-fit {
+    position: fixed;
+    inset: 0;
+    min-height: 0;
+    height: 100vh;
+    height: var(--login-height, 100dvh);
+    max-height: 100%;
+    overflow: hidden;
+    grid-template-columns: 1.08fr 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    padding: 0;
+    background:
+      radial-gradient(ellipse at 95% 5%, #bdcfc265, transparent 60%), #e3ebe2;
+  }
+  #login-screen.access-fit .login-story {
+    min-height: 0;
+    height: 100%;
+    padding: clamp(24px, 5vh, 55px) clamp(28px, 4.7vw, 78px);
+  }
+  #login-screen.access-fit .login-story:before {
+    opacity: 0.94;
+  }
+  #login-screen.access-fit .login-story:after {
+    border-radius: 50%;
+  }
+  #login-screen.access-fit .login-wordmark {
+    margin-bottom: clamp(20px, 4.5vh, 46px);
+    font-size: 27px;
+  }
+  #login-screen.access-fit .login-story h1 {
+    font-size: clamp(34px, 3.5vw, 50px);
+    margin-block: 15px 18px;
+  }
+  #login-screen.access-fit .login-story > p {
+    font-size: 12px;
+    line-height: 1.85;
+  }
+  #login-screen.access-fit .login-pillars {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 24px 0;
+    border: 0;
+  }
+  #login-screen.access-fit .login-pillars span {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 10px 0;
+    border-block: 1px solid #ced5af2c;
+    font-size: 8px;
+  }
+  #login-screen.access-fit .login-pillars b {
+    font-size: 10px;
+  }
+  #login-screen.access-fit .access-verse {
+    margin-bottom: 16px;
+    padding-left: 13px;
+  }
+  #login-screen.access-fit .access-verse p {
+    font-size: 23px;
+    line-height: 1.7;
+  }
+  #login-screen.access-fit .login-panel {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    width: min(100% - 48px, 458px);
+    max-height: calc(100% - 40px);
+    min-height: 0;
+    margin: auto;
+    padding: 24px 30px 21px;
+    overflow: hidden;
+    border: 1px solid #a7bfae85;
+    border-radius: 22px;
+    background: linear-gradient(145deg, #edf1e7f5, #dce8ddf5);
+    box-shadow:
+      0 22px 65px #133b3914,
+      inset 0 1px #fff9;
+  }
+  #login-screen.access-fit .login-panel:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 30px;
+    right: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #b79962, transparent);
+    pointer-events: none;
+  }
+  #login-screen.access-fit .login-home-link {
+    min-height: 32px;
+    margin: 0 0 14px;
+    padding: 0;
+    font-size: 10px;
+  }
+  #login-screen.access-fit .login-home-link > span {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  #login-screen.access-fit .login-panel-body {
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #8ba995 transparent;
+  }
+  #login-screen.access-fit .login-brandline {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 14px;
+  }
+  #login-screen.access-fit .login-logo {
+    display: grid;
+    place-items: center;
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    margin: 0;
+  }
+  #login-screen.access-fit .login-logo img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+  }
+  #login-screen.access-fit .login-brandline .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.45px;
+  }
+  #login-screen.access-fit .login-brandline small {
+    display: block;
+    margin-top: 4px;
+    max-width: 210px;
+    font:
+      500 7px/1.7 Manrope,
+      sans-serif;
+    letter-spacing: 0.75px;
+    color: #688071;
+  }
+  #login-screen.access-fit .login-panel h2 {
+    font-size: 26px;
+    line-height: 1.3;
+    margin: 6px 0 8px;
+  }
+  #login-screen.access-fit #login-description {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.75;
+    color: #4f6b5e;
+  }
+  #login-screen.access-fit #login-form {
+    margin: 18px 0 0;
+  }
+  #login-screen.access-fit .login-panel .field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0 0 12px;
+    font-size: 11px;
+  }
+  #login-screen.access-fit .login-panel .field input {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 16px;
+    line-height: 1.4;
+    border-radius: 9px;
+  }
+  #login-screen.access-fit #login-error {
+    font-size: 11px;
+    line-height: 1.65;
+    margin: 7px 0;
+    overflow-wrap: anywhere;
+  }
+  #login-screen.access-fit #login-error:empty {
+    display: none;
+  }
+  #login-screen.access-fit #login-submit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    min-height: 46px;
+    margin-top: 8px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    box-shadow: 0 3px 0 #092d36;
+    font-size: 11px;
+  }
+  #login-screen.access-fit .login-panel .login-help {
+    margin: 14px 0 0;
+    font-size: 10px;
+    line-height: 1.65;
+    color: #506b5e;
+  }
+  #login-screen.access-fit .login-footer {
+    display: block;
+    margin: 14px 0 0;
+    padding-top: 12px;
+    font-size: 8px;
+    line-height: 1.6;
+    color: #526b5c;
+  }
+  #login-screen.access-fit .startup-loading {
+    margin: 8px 0;
+    font-size: 10px;
+  }
+  #login-screen.access-fit .startup-loading .rq-loader {
+    width: 28px;
+    height: 28px;
+  }
+  #login-screen.access-fit .startup-loading .rq-loading-label {
+    font-size: 10px;
+  }
+  @media (max-height: 650px) {
+    #login-screen.access-fit .login-story {
+      padding-block: 24px;
+    }
+    #login-screen.access-fit .login-wordmark {
+      margin-bottom: 18px;
+      font-size: 24px;
+    }
+    #login-screen.access-fit .login-story h1 {
+      font-size: 34px;
+      margin-block: 12px;
+    }
+    #login-screen.access-fit .login-pillars {
+      margin-block: 16px;
+    }
+    #login-screen.access-fit .access-verse {
+      margin-bottom: 10px;
+    }
+    #login-screen.access-fit .access-verse p {
+      font-size: 21px;
+    }
+    #login-screen.access-fit .login-panel {
+      padding-block: 17px;
+      max-height: calc(100% - 24px);
+    }
+    #login-screen.access-fit .login-home-link {
+      margin-bottom: 10px;
+      min-height: 28px;
+    }
+    #login-screen.access-fit .login-brandline {
+      margin-bottom: 9px;
+    }
+    #login-screen.access-fit .login-logo {
+      width: 44px;
+      height: 44px;
+      flex-basis: 44px;
+    }
+    #login-screen.access-fit .login-panel h2 {
+      font-size: 23px;
+      margin-block: 4px 6px;
+    }
+    #login-screen.access-fit #login-form {
+      margin-top: 13px;
+    }
+    #login-screen.access-fit .login-panel .field {
+      margin-bottom: 10px;
+    }
+    #login-screen.access-fit .login-panel .field input {
+      min-height: 42px;
+      padding-block: 9px;
+    }
+    #login-screen.access-fit .login-panel .login-help {
+      margin-top: 11px;
+    }
+    #login-screen.access-fit .login-footer {
+      margin-top: 10px;
+      padding-top: 9px;
+    }
+  }
+  @media (max-width: 760px) {
+    #login-screen.access-fit {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 14px;
+      background:
+        linear-gradient(140deg, #092837e0, #153e43ed),
+        url("../assets/dayah-kubah-cahaya.jpg") center/cover;
+    }
+    #login-screen.access-fit .login-story {
+      display: none;
+    }
+    #login-screen.access-fit .login-panel {
+      width: min(100%, 420px);
+      max-height: 100%;
+      padding: 22px;
+      border-radius: 19px;
+      box-shadow: 0 20px 60px #00182540;
+    }
+    #login-screen.access-fit .login-panel h2 {
+      font-size: 25px;
+    }
+    #login-screen.access-fit .login-home-link {
+      margin-bottom: 14px;
+    }
+  }
+  @media (max-width: 760px) and (max-height: 650px) {
+    #login-screen.access-fit {
+      padding: 10px;
+    }
+    #login-screen.access-fit .login-panel {
+      padding: 16px 19px;
+    }
+    #login-screen.access-fit .login-panel h2 {
+      font-size: 23px;
+    }
+  }
+  @media (max-height: 420px) {
+    #login-screen.access-fit .login-panel {
+      padding: 12px 18px;
+    }
+    #login-screen.access-fit .login-home-link {
+      margin-bottom: 6px;
+    }
+    #login-screen.access-fit .login-footer {
+      margin-top: 7px;
+      padding-top: 7px;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    #login-screen.access-fit .login-panel {
+      animation: login-fit-enter 0.38s ease both;
+    }
+    #login-screen.access-fit .login-story h1 {
+      animation: login-fit-enter 0.42s ease both;
+    }
+    #login-screen.access-fit .login-story:after {
+      animation: login-orbit-drift 20s ease-in-out infinite alternate;
+    }
+    body.workspace-entering #workspace {
+      animation: workspace-entrance 0.32s cubic-bezier(0.2, 0.75, 0.2, 1) both;
+    }
+    @keyframes login-fit-enter {
+      from {
+        opacity: 0;
+        transform: translateY(9px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes login-orbit-drift {
+      from {
+        transform: translateY(-8px) rotate(-8deg);
+      }
+      to {
+        transform: translateY(12px) rotate(8deg);
+      }
+    }
+    @keyframes workspace-entrance {
+      from {
+        opacity: 0.3;
+        transform: translateY(7px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #login-screen.access-fit *,
+    body.workspace-entering #workspace {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 </style>
  <style>
   @import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap");
@@ -12834,10 +13219,10 @@
 </style>
 
   <link rel="stylesheet" href="../assets/access.css"><script defer src="../assets/access.js"></script><style>.archive-unified-note{margin:0 0 14px;padding:10px 14px;border-left:2px solid #b39b61;background:#dbe9e7;color:#365a66;font-size:12px}</style></head>
-  <body>
+  <body class="login-active">
     <section
       id="login-screen"
-      class="login-screen"
+      class="login-screen access-fit"
       aria-labelledby="login-title"
     >
       <div class="login-story">
@@ -12866,7 +13251,9 @@
         <a class="login-home-link" href="../" data-osda-nav="landing"
           ><span aria-hidden="true">←</span>Kembali ke beranda</a
         >
-        <div class="login-logo"><span class="logo-frame"
+        <div class="login-panel-body">
+          <div class="login-brandline">
+            <div class="login-logo"><span class="logo-frame"
   ><img
     alt="Logo OSDA RQ"
     width="116"
@@ -12874,125 +13261,131 @@
     src="../assets/osda-logo.png"
 /></span>
 </div>
-        <span class="eyebrow">RUANG PENGURUS</span>
-        <h2 id="login-title">Selamat datang kembali</h2>
-        <p id="login-description">
-          Masuk dengan akun yang diberikan admin OSDA.
-        </p>
-        <div id="startup-loading" class="startup-loading" role="status">
-          <span class="rq-loading rq-loading--sm"
-            ><svg
-              class="rq-loader"
-              viewBox="0 0 48 48"
-              fill="none"
-              aria-hidden="true"
-              focusable="false"
+            <span class="eyebrow"
+              >RUANG PENGURUS<small
+                >ORGANISASI SANTRI · DAYAH RUHUL QURANI</small
+              ></span
             >
-              <title>RQ</title>
-              <g class="rq-loader-orbit">
-                <circle
-                  class="rq-loader-arc"
-                  cx="24"
-                  cy="24"
-                  r="21"
-                  pathLength="100"
-                />
-                <circle class="rq-loader-spark" cx="24" cy="3" r="1.65" />
-              </g>
-              <g class="rq-loader-orbit rq-loader-orbit--inner">
-                <circle
-                  class="rq-loader-arc"
-                  cx="24"
-                  cy="24"
-                  r="18"
-                  pathLength="100"
-                />
-              </g>
-              <g class="rq-loader-monogram">
-                <g class="rq-loader-ghost">
+          </div>
+          <h2 id="login-title">Selamat datang kembali</h2>
+          <p id="login-description">
+            Masuk dengan akun yang diberikan admin OSDA.
+          </p>
+          <div id="startup-loading" class="startup-loading" role="status">
+            <span class="rq-loading rq-loading--sm"
+              ><svg
+                class="rq-loader"
+                viewBox="0 0 48 48"
+                fill="none"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <title>RQ</title>
+                <g class="rq-loader-orbit">
+                  <circle
+                    class="rq-loader-arc"
+                    cx="24"
+                    cy="24"
+                    r="21"
+                    pathLength="100"
+                  />
+                  <circle class="rq-loader-spark" cx="24" cy="3" r="1.65" />
+                </g>
+                <g class="rq-loader-orbit rq-loader-orbit--inner">
+                  <circle
+                    class="rq-loader-arc"
+                    cx="24"
+                    cy="24"
+                    r="18"
+                    pathLength="100"
+                  />
+                </g>
+                <g class="rq-loader-monogram">
+                  <g class="rq-loader-ghost">
+                    <path
+                      class="rq-loader-r"
+                      d="M11 33V15h7a6 6 0 0 1 0 12h-7m7 0 7 7"
+                    />
+                    <path
+                      class="rq-loader-q"
+                      d="M23 24c0-5.5 2-9 6.5-9s6.5 3.5 6.5 9-2 9-6.5 9-6.5-3.5-6.5-9Zm7 4 8 8"
+                    />
+                  </g>
                   <path
-                    class="rq-loader-r"
+                    class="rq-loader-letter rq-loader-r"
+                    pathLength="100"
                     d="M11 33V15h7a6 6 0 0 1 0 12h-7m7 0 7 7"
                   />
                   <path
-                    class="rq-loader-q"
+                    class="rq-loader-letter rq-loader-q"
+                    pathLength="100"
                     d="M23 24c0-5.5 2-9 6.5-9s6.5 3.5 6.5 9-2 9-6.5 9-6.5-3.5-6.5-9Zm7 4 8 8"
                   />
-                </g>
-                <path
-                  class="rq-loader-letter rq-loader-r"
-                  pathLength="100"
-                  d="M11 33V15h7a6 6 0 0 1 0 12h-7m7 0 7 7"
-                />
-                <path
-                  class="rq-loader-letter rq-loader-q"
-                  pathLength="100"
-                  d="M23 24c0-5.5 2-9 6.5-9s6.5 3.5 6.5 9-2 9-6.5 9-6.5-3.5-6.5-9Zm7 4 8 8"
-                />
-              </g></svg
-            ><span class="rq-loading-label"
-              >Menyiapkan ruang pengurus…</span
-            ></span
-          >
+                </g></svg
+              ><span class="rq-loading-label"
+                >Menyiapkan ruang pengurus…</span
+              ></span
+            >
+          </div>
+          <form id="login-form">
+            <label class="field" id="login-name-field" hidden
+              >Nama lengkap<input
+                id="login-name"
+                maxlength="160"
+                autocomplete="name"
+            /></label>
+            <label class="field"
+              >Username<input
+                id="login-username"
+                required
+                maxlength="40"
+                autocapitalize="none"
+                spellcheck="false"
+                autocomplete="username"
+                placeholder="Contoh: ketua.putra"
+            /></label>
+            <label class="field"
+              >Kata sandi<input
+                id="login-password"
+                type="password"
+                required
+                maxlength="128"
+                autocomplete="current-password"
+            /></label>
+            <label class="field" id="login-confirm-field" hidden
+              >Ulangi kata sandi<input
+                id="login-confirm"
+                type="password"
+                maxlength="128"
+                autocomplete="new-password"
+            /></label>
+            <p class="form-error" id="login-error" role="alert"></p>
+            <button
+              class="button login-submit"
+              id="login-submit"
+              type="submit"
+              disabled
+            >
+              Masuk ke ruang pengurus <span aria-hidden="true">→</span>
+            </button>
+          </form>
+          <p class="login-help">
+            Lupa kata sandi? Hubungi admin untuk mendapatkan kata sandi
+            sementara.
+          </p>
+          <div id="owner-tools" hidden>
+            <button type="button" id="owner-setup" class="login-owner-action">
+              Siapkan admin pertama</button
+            ><button
+              type="button"
+              id="login-back"
+              class="login-owner-action"
+              hidden
+            >
+              Kembali ke login
+            </button>
+          </div>
         </div>
-        <form id="login-form">
-          <label class="field" id="login-name-field" hidden
-            >Nama lengkap<input
-              id="login-name"
-              maxlength="160"
-              autocomplete="name"
-          /></label>
-          <label class="field"
-            >Username<input
-              id="login-username"
-              required
-              maxlength="40"
-              autocapitalize="none"
-              spellcheck="false"
-              autocomplete="username"
-              placeholder="Contoh: ketua.putra"
-          /></label>
-          <label class="field"
-            >Kata sandi<input
-              id="login-password"
-              type="password"
-              required
-              maxlength="128"
-              autocomplete="current-password"
-          /></label>
-          <label class="field" id="login-confirm-field" hidden
-            >Ulangi kata sandi<input
-              id="login-confirm"
-              type="password"
-              maxlength="128"
-              autocomplete="new-password"
-          /></label>
-          <p class="form-error" id="login-error" role="alert"></p>
-          <button
-            class="button login-submit"
-            id="login-submit"
-            type="submit"
-            disabled
-          >
-            Masuk ke ruang pengurus <span aria-hidden="true">→</span>
-          </button>
-        </form>
-        <p class="login-help">
-          Lupa kata sandi? Hubungi admin untuk mendapatkan kata sandi sementara.
-        </p>
-        <div id="owner-tools" hidden>
-          <button type="button" id="owner-setup" class="login-owner-action">
-            Siapkan admin pertama</button
-          ><button
-            type="button"
-            id="login-back"
-            class="login-owner-action"
-            hidden
-          >
-            Kembali ke login
-          </button>
-        </div>
-
         <small class="login-footer">Organisasi Santri Dayah Ruhul Qurani</small>
       </div>
     </section>
@@ -13397,8 +13790,7 @@
     height="116"
     src="../assets/osda-logo.png"
 /></span>
-<span
-          ></span>
+<span></span>
         </div>
         <div class="account-cover-top">
           <span class="eyebrow">OSDA RQ · IDENTITAS AKUN</span

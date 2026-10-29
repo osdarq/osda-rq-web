@@ -61,7 +61,7 @@
     ) {
       caption.textContent = hint.label || "OSDA RQ";
       root.classList.add("osda-route-arriving");
-      recoveryTimer = window.setTimeout(resetRoute, 650);
+      recoveryTimer = window.setTimeout(resetRoute, 380);
     }
   } catch {}
 
@@ -110,7 +110,7 @@
     root.classList.add("osda-route-leaving");
     navigationTimer = window.setTimeout(
       () => window.location.assign(destination.href),
-      360,
+      180,
     );
     recoveryTimer = window.setTimeout(() => {
       clearNavigationHint();

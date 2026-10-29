@@ -342,11 +342,11 @@
 .osda-route-leaving .route-curtain {
   visibility: visible;
   transform: translateY(0);
-  transition: transform 0.36s cubic-bezier(0.6, 0, 0.2, 1);
+  transition: transform 0.18s cubic-bezier(0.6, 0, 0.2, 1);
 }
 .osda-route-arriving .route-curtain {
   visibility: visible;
-  animation: route-arrive 0.6s cubic-bezier(0.6, 0, 0.2, 1) both;
+  animation: route-arrive 0.32s cubic-bezier(0.6, 0, 0.2, 1) both;
 }
 @keyframes route-arrive {
   0%,

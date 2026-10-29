@@ -17,21 +17,17 @@ function runner(success, failure) {
   );
 }
 window.google = { script: { run: runner() } };
-try {
-  const boot = await request("boot");
+// Fetch public readiness and download the client at the same time.
+window.OSDA_BOOT_READY = request("boot").then((boot) => {
   window.OSDA_BOOT = { ...window.OSDA_BOOT, ...boot };
-  const script = document.createElement("script");
-  script.src = new URL("./client.js", import.meta.url).href;
-
-  script.onerror = () =>
-    window.OSDA_STARTUP.fail(
-      "Ruang pengurus belum termuat. Muat ulang halaman.",
-    );
-  document.body.append(script);
+});
+const script = document.createElement("script");
+script.src = new URL("./client.js", import.meta.url).href;
+script.onerror = () =>
+  window.OSDA_STARTUP.fail("Ruang pengurus belum termuat. Muat ulang halaman.");
+document.body.append(script);
+try {
+  await window.OSDA_BOOT_READY;
 } catch (e) {
-  document.querySelector("#startup-loading").hidden = true;
-  document.querySelector("#login-submit").disabled = true;
-  document.querySelector("#login-error").textContent = e.message;
-
-  window.OSDA_STARTUP.error = e.message;
+  window.OSDA_STARTUP.fail(e);
 }
